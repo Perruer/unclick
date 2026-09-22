@@ -107,6 +107,13 @@ func Import(provider terraformutils.ProviderGenerator, options ImportOptions, ar
 	providerMapping.ConvertTFStates(providerWrapper)
 	// change structs with additional data for each resource
 	providerMapping.CleanupProviders()
+	// Let the provider reject arguments that break its own rules, and drop
+	// them before anything is written.
+	resources := make([]*terraformutils.Resource, 0, len(providerMapping.Resources))
+	for r := range providerMapping.Resources {
+		resources = append(resources, r)
+	}
+	terraformutils.FixInvalidConfig(resources, providerWrapper)
 
 	err = importFromPlan(providerMapping, options, args)
 

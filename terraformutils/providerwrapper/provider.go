@@ -24,6 +24,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"regexp"
 	"sync"
 	"time"
 
@@ -133,6 +134,59 @@ func readOnlyAttributesOf(r *schema.Provider, resourceTypes []string) map[string
 		}
 	}
 	return readOnlyAttributes
+}
+
+// ValidateResourceConfig asks the provider to validate a resource body.
+func (p *ProviderWrapper) ValidateResourceConfig(typeName string, config cty.Value) ([]plugin.Diagnostic, error) {
+	return p.provider.ValidateResourceConfig(context.Background(), typeName, config)
+}
+
+// GetZeroNumberAttributes returns, per resource type, patterns for optional
+// number attributes whose value 0 must not be written to configuration.
+func (p *ProviderWrapper) GetZeroNumberAttributes(resourceTypes []string) map[string][]string {
+	return zeroNumberAttributesOf(p.GetSchema(), resourceTypes)
+}
+
+// zeroNumberAttributesOf covers resources built with the legacy plugin SDK
+// (SDKv2), which stores 0 rather than null for a number that was never set.
+// Writing that 0 back can break rules the schema does not expose, such as
+// aws_vpc.ipv6_netmask_length needing ipv6_ipam_pool_id; leaving it out reads
+// back as 0, so the plan does not change. Booleans are kept because a false
+// is often an explicit override of a true default.
+func zeroNumberAttributesOf(r *schema.Provider, resourceTypes []string) map[string][]string {
+	out := map[string][]string{}
+	for _, name := range resourceTypes {
+		rs, ok := r.ResourceTypes[name]
+		if !ok || !isLegacySDKResource(rs.Block) {
+			continue
+		}
+		if patterns := zeroNumberPatterns(rs.Block, "^"); len(patterns) > 0 {
+			out[name] = patterns
+		}
+	}
+	return out
+}
+
+// isLegacySDKResource recognizes SDKv2 resources by the "id" attribute the
+// SDK adds to every resource as optional and computed. Plugin framework
+// resources declare id themselves, as computed only.
+func isLegacySDKResource(b *schema.Block) bool {
+	id := b.Attributes["id"]
+	return id != nil && id.Optional && id.Computed
+}
+
+func zeroNumberPatterns(b *schema.Block, prefix string) []string {
+	var out []string
+	for name, a := range b.Attributes {
+		if a.Optional && !a.Required && a.ImpliedType().Equals(cty.Number) {
+			out = append(out, prefix+regexp.QuoteMeta(name)+"$")
+		}
+	}
+	for name, nb := range b.BlockTypes {
+		// SDKv2 flattens every nested block as a list or a set.
+		out = append(out, zeroNumberPatterns(&nb.Block, prefix+regexp.QuoteMeta(name)+`\.[0-9]+\.`)...)
+	}
+	return out
 }
 
 func readObjBlocks(block map[string]*schema.NestedBlock, readOnlyAttributes []string, parent string) []string {

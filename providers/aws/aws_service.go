@@ -72,8 +72,11 @@ func (s *AWSService) generateConfig() (aws.Config, error) {
 
 func (s *AWSService) buildBaseConfig() (aws.Config, error) {
 	var loadOptions []func(*config.LoadOptions) error
-	if s.GetArgs()["profile"].(string) != "" {
-		loadOptions = append(loadOptions, config.WithSharedConfigProfile(s.GetArgs()["profile"].(string)))
+	// Naming the "default" profile explicitly makes the SDK fail when there is
+	// no shared config file, even with credentials in the environment or an
+	// instance role. Left unset, the SDK still uses it when it exists.
+	if profile := s.GetArgs()["profile"].(string); profile != "" && profile != "default" {
+		loadOptions = append(loadOptions, config.WithSharedConfigProfile(profile))
 	}
 	if s.GetArgs()["region"].(string) != "" {
 		os.Setenv("AWS_REGION", s.GetArgs()["region"].(string))

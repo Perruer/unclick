@@ -21,7 +21,71 @@ jobs:
       with:
         go-version-file: go.mod
         cache: true
-    - name: Go Mod Tidy
-      run: go mod tidy
-    - name: Test
-      run: go build -v && go test ./...
+    - name: Build every provider
+      run: go build -v ./...
+    - name: Unit tests
+      run: go test ./...
+
+  acceptance:
+    # Starts real provider plugins downloaded by OpenTofu.
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-go@v5
+      with:
+        go-version-file: go.mod
+        cache: true
+    - uses: opentofu/setup-opentofu@v1
+      with:
+        tofu_wrapper: false
+    - name: Plugin client against real providers
+      run: go test ./internal/...
+      env:
+        UNCLICK_ACC: "1"
+
+  e2e-aws:
+    # Imports a small estate from a moto server and checks that `tofu plan`
+    # only imports: no changes, no new or destroyed resources.
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-go@v5
+      with:
+        go-version-file: go.mod
+        cache: true
+    - uses: opentofu/setup-opentofu@v1
+      with:
+        tofu_wrapper: false
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+    - name: Start moto
+      run: |
+        pip install "moto[server]"
+        moto_server -H 127.0.0.1 -p 5000 &
+        for i in $(seq 1 30); do curl -sf http://127.0.0.1:5000/moto-api/ >/dev/null && break; sleep 1; done
+    - name: Build unclick with the AWS provider
+      run: go build -tags slim,aws -o unclick .
+    - name: Import and plan
+      run: bash tests/e2e/aws/run.sh
+      env:
+        UNCLICK: ${{ github.workspace }}/unclick
+
+  e2e-kubernetes:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-go@v5
+      with:
+        go-version-file: go.mod
+        cache: true
+    - uses: opentofu/setup-opentofu@v1
+      with:
+        tofu_wrapper: false
+    - uses: helm/kind-action@v1
+    - name: Build unclick with the Kubernetes provider
+      run: go build -tags slim,kubernetes -o unclick .
+    - name: Import and plan
+      run: bash tests/e2e/kubernetes/run.sh
+      env:
+        UNCLICK: ${{ github.workspace }}/unclick

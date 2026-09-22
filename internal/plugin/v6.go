@@ -132,14 +132,41 @@ func (p *v6) importResourceState(ctx context.Context, typeName, id string, types
 	return out, nil
 }
 
-func diags6(ds []*proto.Diagnostic) []diagnostic {
-	out := make([]diagnostic, 0, len(ds))
+func (p *v6) validateResourceConfig(ctx context.Context, typeName string, config cty.Value, ty cty.Type) ([]Diagnostic, error) {
+	raw, err := encode(config, ty)
+	if err != nil {
+		return nil, fmt.Errorf("encoding %s configuration: %w", typeName, err)
+	}
+	resp, err := p.client.ValidateResourceConfig(ctx, &proto.ValidateResourceConfig_Request{
+		TypeName:           typeName,
+		Config:             &proto.DynamicValue{Msgpack: raw},
+		ClientCapabilities: caps6,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("ValidateResourceConfig %s: %w", typeName, err)
+	}
+	return diags6(resp.Diagnostics), nil
+}
+
+func diags6(ds []*proto.Diagnostic) []Diagnostic {
+	out := make([]Diagnostic, 0, len(ds))
 	for _, d := range ds {
-		out = append(out, diagnostic{
-			isError: d.Severity == proto.Diagnostic_ERROR,
-			summary: d.Summary,
-			detail:  d.Detail,
-		})
+		diag := Diagnostic{
+			Error:   d.Severity == proto.Diagnostic_ERROR,
+			Summary: d.Summary,
+			Detail:  d.Detail,
+		}
+		for _, step := range d.GetAttribute().GetSteps() {
+			switch sel := step.Selector.(type) {
+			case *proto.AttributePath_Step_AttributeName:
+				diag.Path = append(diag.Path, PathStep{Attribute: sel.AttributeName})
+			case *proto.AttributePath_Step_ElementKeyString:
+				diag.Path = append(diag.Path, PathStep{Key: sel.ElementKeyString, IsKey: true})
+			case *proto.AttributePath_Step_ElementKeyInt:
+				diag.Path = append(diag.Path, PathStep{Index: sel.ElementKeyInt, IsIndex: true})
+			}
+		}
+		out = append(out, diag)
 	}
 	return out
 }

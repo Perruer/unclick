@@ -56,24 +56,36 @@ func decodeType(raw []byte) (cty.Type, error) {
 	return ty, nil
 }
 
-// diagnostic is the protocol-independent part of a provider diagnostic.
-type diagnostic struct {
-	isError bool
-	summary string
-	detail  string
+// PathStep is one step of the attribute path a diagnostic points at: an
+// attribute name, a map key or a list index.
+type PathStep struct {
+	Attribute string
+	Key       string
+	Index     int64
+	IsKey     bool
+	IsIndex   bool
+}
+
+// Diagnostic is an error or a warning reported by a provider.
+type Diagnostic struct {
+	Error   bool
+	Summary string
+	Detail  string
+	// Path is empty when the diagnostic is not about one attribute.
+	Path []PathStep
 }
 
 // diagError joins error diagnostics into one error; warnings are dropped
 // because they rarely matter when reading existing objects.
-func diagError(what string, diags []diagnostic) error {
+func diagError(what string, diags []Diagnostic) error {
 	var msgs []string
 	for _, d := range diags {
-		if !d.isError {
+		if !d.Error {
 			continue
 		}
-		msg := d.summary
-		if d.detail != "" {
-			msg += ": " + d.detail
+		msg := d.Summary
+		if d.Detail != "" {
+			msg += ": " + d.Detail
 		}
 		msgs = append(msgs, msg)
 	}

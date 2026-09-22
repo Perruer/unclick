@@ -114,3 +114,42 @@ func TestDeprecatedAttributesAreIgnored(t *testing.T) {
 		}
 	}
 }
+
+func TestZeroNumbersOnlyForLegacySDKResources(t *testing.T) {
+	sdkv2 := &schema.Block{
+		Attributes: map[string]*schema.Attribute{
+			"id":                  {Type: cty.String, Optional: true, Computed: true},
+			"ipv6_netmask_length": {Type: cty.Number, Optional: true},
+			"from_port":           {Type: cty.Number, Required: true},
+			"enable_dns":          {Type: cty.Bool, Optional: true},
+		},
+		BlockTypes: map[string]*schema.NestedBlock{
+			"rule": {Nesting: schema.NestingSet, Block: schema.Block{
+				Attributes: map[string]*schema.Attribute{"priority": {Type: cty.Number, Optional: true}},
+			}},
+		},
+	}
+	framework := &schema.Block{Attributes: map[string]*schema.Attribute{
+		"id":    {Type: cty.String, Computed: true},
+		"count": {Type: cty.Number, Optional: true},
+	}}
+	s := &schema.Provider{ResourceTypes: map[string]schema.Resource{
+		"aws_vpc":   {Block: sdkv2},
+		"new_thing": {Block: framework},
+	}}
+	got := zeroNumberAttributesOf(s, []string{"aws_vpc", "new_thing"})
+	if _, ok := got["new_thing"]; ok {
+		t.Error("framework resources store null for unset numbers and must be left alone")
+	}
+	patterns := got["aws_vpc"]
+	for _, key := range []string{"ipv6_netmask_length", "rule.2837491.priority"} {
+		if !isAttributeIgnored(key, patterns) {
+			t.Errorf("%s should be a zero-number key; patterns: %v", key, patterns)
+		}
+	}
+	for _, key := range []string{"from_port", "enable_dns", "id"} {
+		if isAttributeIgnored(key, patterns) {
+			t.Errorf("%s must not be a zero-number key; patterns: %v", key, patterns)
+		}
+	}
+}

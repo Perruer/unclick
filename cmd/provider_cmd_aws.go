@@ -75,7 +75,7 @@ func newCmdAwsImporter(options ImportOptions) *cobra.Command {
 	cmd.AddCommand(listCmd(newAWSProvider()))
 	baseProviderFlags(cmd.PersistentFlags(), &options, "vpc,subnet,nacl", "elb=id1:id2:id4")
 
-	cmd.PersistentFlags().StringVarP(&options.Profile, "profile", "", "default", "prod")
+	cmd.PersistentFlags().StringVarP(&options.Profile, "profile", "", "", "shared config profile (default: the SDK credential chain, AWS_PROFILE or the default profile)")
 	cmd.PersistentFlags().StringSliceVarP(&options.Regions, "regions", "", []string{}, "eu-west-1,eu-west-2,us-east-1")
 	return cmd
 }

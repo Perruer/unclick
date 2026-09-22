@@ -34,6 +34,7 @@ type FlatmapParser struct {
 	attributes       map[string]string
 	ignoreKeys       []*regexp.Regexp
 	allowEmptyValues []*regexp.Regexp
+	zeroValueKeys    []*regexp.Regexp
 }
 
 func NewFlatmapParser(attributes map[string]string, ignoreKeys []*regexp.Regexp, allowEmptyValues []*regexp.Regexp) *FlatmapParser {
@@ -90,6 +91,13 @@ func (p *FlatmapParser) fromFlatmapPrimitive(key string) (interface{}, error) {
 	value, ok := p.attributes[key]
 	if !ok {
 		return nil, nil
+	}
+	if value == "0" {
+		for _, pattern := range p.zeroValueKeys {
+			if pattern.MatchString(key) {
+				return nil, nil
+			}
+		}
 	}
 	return value, nil
 }

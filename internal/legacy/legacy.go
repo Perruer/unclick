@@ -17,10 +17,28 @@
 // They are plain data: nothing here talks to Terraform.
 package legacy
 
+import "strings"
+
 // InstanceInfo identifies a resource by its type and HCL address.
 type InstanceInfo struct {
 	Id   string //nolint:revive // name kept for compatibility with importers
 	Type string
+}
+
+// ResourceAddress is the parsed form of InstanceInfo.Id.
+type ResourceAddress struct {
+	Type string
+	Name string
+}
+
+// String returns the address as written in configuration, "type.name".
+func (a *ResourceAddress) String() string {
+	return a.Type + "." + a.Name
+}
+
+// ResourceAddress splits the HCL address of the resource.
+func (i *InstanceInfo) ResourceAddress() *ResourceAddress {
+	return &ResourceAddress{Type: i.Type, Name: strings.TrimPrefix(i.Id, i.Type+".")}
 }
 
 // InstanceState is a resource in the flatmap form: every value, however

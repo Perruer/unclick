@@ -157,11 +157,10 @@ func (s *Service) PopulateIgnoreKeys(providerWrapper *providerwrapper.ProviderWr
 		resourcesTypes = append(resourcesTypes, r.InstanceInfo.Type)
 	}
 	keys := IgnoreKeys(resourcesTypes, providerWrapper)
-	for k, v := range keys {
-		for i := range s.Resources {
-			if s.Resources[i].InstanceInfo.Type == k {
-				s.Resources[i].IgnoreKeys = append(s.Resources[i].IgnoreKeys, v...)
-			}
-		}
+	zeroKeys := providerWrapper.GetZeroNumberAttributes(resourcesTypes)
+	for i := range s.Resources {
+		t := s.Resources[i].InstanceInfo.Type
+		s.Resources[i].IgnoreKeys = append(s.Resources[i].IgnoreKeys, keys[t]...)
+		s.Resources[i].ZeroValueKeys = append(s.Resources[i].ZeroValueKeys, zeroKeys[t]...)
 	}
 }

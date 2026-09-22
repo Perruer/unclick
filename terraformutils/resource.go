@@ -21,8 +21,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Perruer/unclick/terraformutils/providerwrapper"
 	"github.com/Perruer/unclick/internal/legacy"
+	"github.com/Perruer/unclick/terraformutils/providerwrapper"
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -38,6 +38,9 @@ type Resource struct {
 	AdditionalFields  map[string]interface{} `json:",omitempty"`
 	SlowQueryRequired bool
 	DataFiles         map[string][]byte
+	// ZeroValueKeys are patterns for keys to leave out when their value is
+	// "0"; see providerwrapper.GetZeroNumberAttributes.
+	ZeroValueKeys []string `json:",omitempty"`
 	// ImportID is the ID an `import` block needs when it differs from the
 	// ID the provider keeps in state. Empty means the state ID works.
 	ImportID string `json:",omitempty"`
@@ -182,6 +185,9 @@ func (r *Resource) ConvertTFstate(provider *providerwrapper.ProviderWrapper) err
 		}
 	}
 	parser := NewFlatmapParser(r.InstanceState.Attributes, ignoreKeys, allowEmptyValues)
+	for _, pattern := range r.ZeroValueKeys {
+		parser.zeroValueKeys = append(parser.zeroValueKeys, regexp.MustCompile(pattern))
+	}
 	schema := provider.GetSchema()
 	impliedType := schema.ResourceTypes[r.InstanceInfo.Type].Block.ImpliedType()
 	return r.ParseTFstate(parser, impliedType)

@@ -85,6 +85,7 @@ type protocol interface {
 	configure(ctx context.Context, config cty.Value, ty cty.Type) error
 	readResource(ctx context.Context, typeName string, state cty.Value, ty cty.Type, private []byte) (cty.Value, []byte, error)
 	importResourceState(ctx context.Context, typeName, id string, types func(string) (cty.Type, bool)) ([]ImportedResource, error)
+	validateResourceConfig(ctx context.Context, typeName string, config cty.Value, ty cty.Type) ([]Diagnostic, error)
 }
 
 // Provider is a running provider plugin.
@@ -195,6 +196,18 @@ func (p *Provider) ImportResourceState(ctx context.Context, typeName, id string)
 		}
 		return r.Block.ImpliedType(), true
 	})
+}
+
+// ValidateResourceConfig checks a resource configuration the way `tofu
+// validate` does, including rules the schema cannot express, such as
+// arguments that conflict with or require each other. config must conform
+// to the resource type's schema; unknown values stand for references.
+func (p *Provider) ValidateResourceConfig(ctx context.Context, typeName string, config cty.Value) ([]Diagnostic, error) {
+	ty, err := p.resourceType(ctx, typeName)
+	if err != nil {
+		return nil, err
+	}
+	return p.rpc.validateResourceConfig(ctx, typeName, config, ty)
 }
 
 func (p *Provider) resourceType(ctx context.Context, typeName string) (cty.Type, error) {
