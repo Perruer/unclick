@@ -1,0 +1,26 @@
+Unclick
+Copyright 2026 Perruer
+
+Unclick continues Terraformer (https://github.com/GoogleCloudPlatform/terraformer),
+which was created by Waze SRE and archived on March 16, 2026.
+Copyright 2018-2026 The Terraformer Authors (see AUTHORS).
+Terraformer and Unclick are licensed under the Apache License, Version 2.0
+(see LICENSE).
+
+Files under the Mozilla Public License 2.0
+------------------------------------------
+The following files come from other projects and keep their license, the
+Mozilla Public License 2.0 (see LICENSES/MPL-2.0.txt). Their source code is
+this repository.
+
+- internal/shim/ and internal/flatmap/: from HashiCorp Terraform v0.12.31
+  (configs/hcl2shim and flatmap), https://github.com/hashicorp/terraform
+- internal/tfplugin5/ and internal/tfplugin6/: the plugin protocol
+  definitions (versions 5.11 and 6.11) and the Go code generated from them,
+  from https://github.com/hashicorp/terraform-plugin-go
+
+Trademarks
+----------
+Terraform is a trademark of HashiCorp. OpenTofu is a trademark of The Linux
+Foundation. Unclick is an independent project, not affiliated with or
+endorsed by Google, HashiCorp or the OpenTofu project.
