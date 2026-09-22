@@ -47,17 +47,13 @@ Note that we currently do not support the unclick `--filter` flag.
 
 ### 4. Inspect the imported terraform files
 
-You should now see a `generated/` subdirectory with generated files. If you are using
-terraform version `>= 0.13`, you will need to run a state migration:
-```bash
-$ cd generated/opal/
-$ terraform state replace-provider -auto-approve "registry.terraform.io/-/opal" "opalsecurity/opal"
-```
+You should now see a `generated/` subdirectory with generated files and an
+`imports.tf` that adopts the existing objects.
 
 You can now initialize and use your new generated resources:
 ```bash
 $ terraform init
-$ terraform plan # No changes. Your infrastructure matches the configuration.
+$ terraform plan # N to import, 0 to add, 0 to change, 0 to destroy.
 ```
 
 ## Supported Opal resources:

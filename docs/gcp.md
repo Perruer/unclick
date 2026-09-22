@@ -172,5 +172,5 @@ List of supported GCP services:
 *   `vpnTunnels`
     * `google_compute_vpn_tunnel`
 
-Your `tf` and `tfstate` files are written by default to
-`generated/gcp/zone/service`.
+The configuration and its `imports.tf` are written by default to
+`generated/google/`. Run `tofu plan` there to adopt the resources.

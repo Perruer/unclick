@@ -18,5 +18,9 @@ List of supported Yandex resources:
 *   `subnet`
     * `yandex_vpc_subnet`
 
-Your `tf` and `tfstate` files are written by default to
-`generated/yandex/service`.
+The configuration and its `imports.tf` are written by default to
+`generated/yandex/`. Run `tofu plan` there to adopt the resources.
+
+The Yandex Cloud provider is not in the OpenTofu registry: Unclick installs it
+from registry.terraform.io, or from the Yandex mirror
+(terraform-mirror.yandexcloud.net) if your OpenTofu CLI configuration uses it.
