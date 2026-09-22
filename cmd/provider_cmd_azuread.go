@@ -1,3 +1,5 @@
+//go:build !slim || azuread
+
 // Copyright 2019 The Terraformer Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,4 +45,8 @@ func newCmdAzureADImporter(options ImportOptions) *cobra.Command {
 
 func newAzureADProvider() terraformutils.ProviderGenerator {
 	return &azuread.AzureADProvider{}
+}
+
+func init() {
+	registerProvider(newCmdAzureADImporter, newAzureADProvider)
 }

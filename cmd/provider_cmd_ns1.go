@@ -1,3 +1,5 @@
+//go:build !slim || ns1
+
 // Copyright 2019 The Terraformer Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -42,4 +44,8 @@ func newCmdNs1Importer(options ImportOptions) *cobra.Command {
 
 func newNs1Provider() terraformutils.ProviderGenerator {
 	return &ns1_terraforming.Ns1Provider{}
+}
+
+func init() {
+	registerProvider(newCmdNs1Importer, newNs1Provider)
 }

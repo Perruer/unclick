@@ -1,3 +1,5 @@
+//go:build !slim || google
+
 // Copyright 2018 The Terraformer Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -56,4 +58,8 @@ func newCmdGoogleImporter(options ImportOptions) *cobra.Command {
 
 func newGoogleProvider() terraformutils.ProviderGenerator {
 	return &gcp_terraforming.GCPProvider{}
+}
+
+func init() {
+	registerProvider(newCmdGoogleImporter, newGoogleProvider)
 }

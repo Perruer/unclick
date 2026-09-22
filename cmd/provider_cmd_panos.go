@@ -1,3 +1,5 @@
+//go:build !slim || panos
+
 // Copyright 2018 The Terraformer Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -79,4 +81,8 @@ func newCmdPanosImporter(options ImportOptions) *cobra.Command {
 func newPanosProvider() terraformutils.ProviderGenerator {
 
 	return &panos_terraforming.PanosProvider{}
+}
+
+func init() {
+	registerProvider(newCmdPanosImporter, newPanosProvider)
 }

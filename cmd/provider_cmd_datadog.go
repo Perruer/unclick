@@ -1,3 +1,5 @@
+//go:build !slim || datadog
+
 // Copyright 2018 The Terraformer Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -45,4 +47,8 @@ func newCmdDatadogImporter(options ImportOptions) *cobra.Command {
 
 func newDataDogProvider() terraformutils.ProviderGenerator {
 	return &datadog_terraforming.DatadogProvider{}
+}
+
+func init() {
+	registerProvider(newCmdDatadogImporter, newDataDogProvider)
 }

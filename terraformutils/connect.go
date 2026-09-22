@@ -26,7 +26,7 @@ func ConnectServices(importResources map[string][]Resource, isServicePath bool, 
 						connectionPair := []string{connectionPairs[i*2], connectionPairs[i*2+1]}
 						for _, ccc := range cc {
 							if !isServicePath {
-								mapResource(importResources, resource, connectionPair, ccc, "local")
+								mapResource(importResources, resource, connectionPair, ccc, "")
 							} else {
 								mapResource(importResources, resource, connectionPair, ccc, k)
 							}
@@ -48,6 +48,10 @@ func mapResource(importResources map[string][]Resource, resource string, connect
 		mappingResourceAttr := WalkAndGet(key, resourceToMap.InstanceState.Attributes)
 		keyValue := resourceToMap.InstanceInfo.Type + "_" + resourceToMap.ResourceName + "_" + key
 		linkValue := "${data.terraform_remote_state." + k + ".outputs." + keyValue + "}"
+		if k == "" {
+			// Same root module: reference the resource itself.
+			linkValue = "${" + resourceToMap.InstanceInfo.Type + "." + resourceToMap.ResourceName + "." + key + "}"
+		}
 
 		if len(mappingResourceAttr) == 1 {
 			resourceIdentifier := mappingResourceAttr[0].(string)

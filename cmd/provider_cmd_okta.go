@@ -1,3 +1,5 @@
+//go:build !slim || okta
+
 // Copyright 2018 The Terraformer Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -56,4 +58,8 @@ func newCmdOktaImporter(options ImportOptions) *cobra.Command {
 
 func newOktaProvider() terraformutils.ProviderGenerator {
 	return &okta_terraforming.OktaProvider{}
+}
+
+func init() {
+	registerProvider(newCmdOktaImporter, newOktaProvider)
 }

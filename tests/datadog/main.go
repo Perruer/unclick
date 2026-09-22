@@ -74,7 +74,6 @@ func main() {
 		Resources:   terraformerServices,
 		PathPattern: "{output}/",
 		PathOutput:  cmd.DefaultPathOutput,
-		State:       "local",
 		Connect:     true,
 		Output:      "hcl",
 		Filter:      terraformerFilters,

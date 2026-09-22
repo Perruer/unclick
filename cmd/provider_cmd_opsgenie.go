@@ -1,3 +1,5 @@
+//go:build !slim || opsgenie
+
 package cmd
 
 import (
@@ -30,4 +32,8 @@ func newCmdOpsgenieImporter(options ImportOptions) *cobra.Command {
 
 func newOpsgenieProvider() terraformutils.ProviderGenerator {
 	return &opsgenie_terraforming.OpsgenieProvider{}
+}
+
+func init() {
+	registerProvider(newCmdOpsgenieImporter, newOpsgenieProvider)
 }

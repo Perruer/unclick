@@ -1,3 +1,5 @@
+//go:build !slim || fastly
+
 // Copyright 2019 The Terraformer Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -42,4 +44,8 @@ func newCmdFastlyImporter(options ImportOptions) *cobra.Command {
 
 func newFastlyProvider() terraformutils.ProviderGenerator {
 	return &fastly_terraforming.FastlyProvider{}
+}
+
+func init() {
+	registerProvider(newCmdFastlyImporter, newFastlyProvider)
 }

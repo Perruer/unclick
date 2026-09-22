@@ -17,7 +17,9 @@ package github
 import (
 	"context"
 	"log"
+	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/Perruer/unclick/terraformutils"
 	githubAPI "github.com/google/go-github/v35/github"
@@ -35,12 +37,14 @@ func (g *RepositoriesGenerator) InitResources() error {
 		return err
 	}
 
-	opt := &githubAPI.RepositoryListByOrgOptions{
-		ListOptions: githubAPI.ListOptions{PerPage: 100},
+	owner := g.GetArgs()["owner"].(string)
+	list, err := repositoryLister(ctx, client, owner)
+	if err != nil {
+		log.Println(err)
+		return nil
 	}
-	// list all repositories for the authenticated user
-	for {
-		repos, resp, err := client.Repositories.ListByOrg(ctx, g.GetArgs()["owner"].(string), opt)
+	for page := 1; page != 0; {
+		repos, resp, err := list(page)
 		if err != nil {
 			log.Println(err)
 			return nil
@@ -60,11 +64,7 @@ func (g *RepositoriesGenerator) InitResources() error {
 			g.Resources = append(g.Resources, g.createRepositoryCollaboratorResources(ctx, client, repo)...)
 			g.Resources = append(g.Resources, g.createRepositoryDeployKeyResources(ctx, client, repo)...)
 		}
-
-		if resp.NextPage == 0 {
-			break
-		}
-		opt.Page = resp.NextPage
+		page = resp.NextPage
 	}
 
 	return nil
@@ -188,4 +188,37 @@ func (g *RepositoriesGenerator) PostConvertHook() error {
 		}
 	}
 	return nil
+}
+
+// repositoryLister returns a function that lists one page of the owner's
+// repositories. The owner may be an organization or a personal account;
+// Terraformer only handled organizations. For the account the token belongs
+// to, private repositories are listed too.
+func repositoryLister(ctx context.Context, client *githubAPI.Client, owner string) (func(page int) ([]*githubAPI.Repository, *githubAPI.Response, error), error) {
+	byOrg := func(page int) ([]*githubAPI.Repository, *githubAPI.Response, error) {
+		return client.Repositories.ListByOrg(ctx, owner, &githubAPI.RepositoryListByOrgOptions{
+			ListOptions: githubAPI.ListOptions{PerPage: 100, Page: page},
+		})
+	}
+	if _, _, err := client.Organizations.Get(ctx, owner); err == nil {
+		return byOrg, nil
+	} else if resp, ok := err.(*githubAPI.ErrorResponse); !ok || resp.Response == nil || resp.Response.StatusCode != http.StatusNotFound {
+		return nil, err
+	}
+
+	user := ""
+	if me, _, err := client.Users.Get(ctx, ""); err == nil && strings.EqualFold(me.GetLogin(), owner) {
+		log.Printf("%s is the authenticated user: listing its private repositories too", owner)
+	} else {
+		user = owner
+	}
+	return func(page int) ([]*githubAPI.Repository, *githubAPI.Response, error) {
+		opt := &githubAPI.RepositoryListOptions{ListOptions: githubAPI.ListOptions{PerPage: 100, Page: page}}
+		if user == "" {
+			opt.Affiliation = "owner"
+		} else {
+			opt.Type = "owner"
+		}
+		return client.Repositories.List(ctx, user, opt)
+	}, nil
 }

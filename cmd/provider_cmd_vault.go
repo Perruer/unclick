@@ -1,3 +1,5 @@
+//go:build !slim || vault
+
 // Copyright 2019 The Terraformer Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -45,4 +47,8 @@ func newCmdVaultImporter(options ImportOptions) *cobra.Command {
 
 func newVaultProvider() terraformutils.ProviderGenerator {
 	return &vault_terraforming.Provider{}
+}
+
+func init() {
+	registerProvider(newCmdVaultImporter, newVaultProvider)
 }

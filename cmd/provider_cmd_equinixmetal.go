@@ -1,3 +1,5 @@
+//go:build !slim || equinixmetal
+
 // Copyright 2021 The Terraformer Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,4 +45,8 @@ func newCmdEquinixMetalImporter(options ImportOptions) *cobra.Command {
 
 func newEquinixMetalProvider() terraformutils.ProviderGenerator {
 	return &equinixmetal_terraforming.EquinixMetalProvider{}
+}
+
+func init() {
+	registerProvider(newCmdEquinixMetalImporter, newEquinixMetalProvider)
 }

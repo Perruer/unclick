@@ -1,3 +1,5 @@
+//go:build !slim || launchdarkly
+
 // Copyright 2021 The Terraformer Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -42,4 +44,8 @@ func newCmdLaunchDarklyImporter(options ImportOptions) *cobra.Command {
 
 func newLaunchDarklyProvider() terraformutils.ProviderGenerator {
 	return &launchdarkly_terraforming.LaunchDarklyProvider{}
+}
+
+func init() {
+	registerProvider(newCmdLaunchDarklyImporter, newLaunchDarklyProvider)
 }

@@ -15,54 +15,14 @@
 package terraformutils
 
 import (
-	"bytes"
 	"log"
 	"sync"
 
 	"github.com/Perruer/unclick/terraformutils/providerwrapper"
-
-	"github.com/hashicorp/terraform/terraform"
 )
 
 type BaseResource struct {
 	Tags map[string]string `json:"tags,omitempty"`
-}
-
-func NewTfState(resources []Resource) *terraform.State {
-	tfstate := &terraform.State{
-		Version:   terraform.StateVersion,
-		TFVersion: terraform.VersionString(), //nolint
-		Serial:    1,
-	}
-	outputs := map[string]*terraform.OutputState{}
-	for _, r := range resources {
-		for k, v := range r.Outputs {
-			outputs[k] = v
-		}
-	}
-	tfstate.Modules = []*terraform.ModuleState{
-		{
-			Path:      []string{"root"},
-			Resources: map[string]*terraform.ResourceState{},
-			Outputs:   outputs,
-		},
-	}
-	for _, resource := range resources {
-		resourceState := &terraform.ResourceState{
-			Type:     resource.InstanceInfo.Type,
-			Primary:  resource.InstanceState,
-			Provider: "provider." + resource.Provider,
-		}
-		tfstate.Modules[0].Resources[resource.InstanceInfo.Type+"."+resource.ResourceName] = resourceState
-	}
-	return tfstate
-}
-
-func PrintTfState(resources []Resource) ([]byte, error) {
-	state := NewTfState(resources)
-	var buf bytes.Buffer
-	err := terraform.WriteState(state, &buf)
-	return buf.Bytes(), err
 }
 
 func RefreshResources(resources []*Resource, provider *providerwrapper.ProviderWrapper, slowProcessingResources [][]*Resource) ([]*Resource, error) {

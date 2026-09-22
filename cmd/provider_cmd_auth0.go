@@ -1,3 +1,5 @@
+//go:build !slim || auth0
+
 // Copyright 2019 The Terraformer Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -57,4 +59,8 @@ func newCmdAuth0Importer(options ImportOptions) *cobra.Command {
 
 func newAuth0Provider() terraformutils.ProviderGenerator {
 	return &auth0_terraforming.Auth0Provider{}
+}
+
+func init() {
+	registerProvider(newCmdAuth0Importer, newAuth0Provider)
 }

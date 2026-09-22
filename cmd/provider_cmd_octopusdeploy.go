@@ -1,3 +1,5 @@
+//go:build !slim || octopusdeploy
+
 package cmd
 
 import (
@@ -33,4 +35,8 @@ func newCmdOctopusDeployImporter(options ImportOptions) *cobra.Command {
 
 func newOctopusDeployProvider() terraformutils.ProviderGenerator {
 	return &octopusdeploy_terraforming.OctopusDeployProvider{}
+}
+
+func init() {
+	registerProvider(newCmdOctopusDeployImporter, newOctopusDeployProvider)
 }

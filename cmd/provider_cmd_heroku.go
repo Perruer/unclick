@@ -1,3 +1,5 @@
+//go:build !slim || heroku
+
 // Copyright 2019 The Terraformer Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -51,4 +53,8 @@ func newCmdHerokuImporter(options ImportOptions) *cobra.Command {
 
 func newHerokuProvider() terraformutils.ProviderGenerator {
 	return &heroku_terraforming.HerokuProvider{}
+}
+
+func init() {
+	registerProvider(newCmdHerokuImporter, newHerokuProvider)
 }

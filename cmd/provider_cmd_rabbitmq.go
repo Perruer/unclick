@@ -1,3 +1,5 @@
+//go:build !slim || rabbitmq
+
 // Copyright 2018 The Terraformer Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -55,4 +57,8 @@ func newCmdRabbitMQImporter(options ImportOptions) *cobra.Command {
 
 func newRabbitMQProvider() terraformutils.ProviderGenerator {
 	return &rabbitmq_terraforming.RBTProvider{}
+}
+
+func init() {
+	registerProvider(newCmdRabbitMQImporter, newRabbitMQProvider)
 }

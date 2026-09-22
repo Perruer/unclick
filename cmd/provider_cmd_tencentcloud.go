@@ -1,3 +1,5 @@
+//go:build !slim || tencentcloud
+
 // Copyright 2021 The Terraformer Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -50,4 +52,8 @@ func newCmdTencentCloudImporter(options ImportOptions) *cobra.Command {
 
 func newTencentCloudProvider() terraformutils.ProviderGenerator {
 	return &tencentcloud_terraforming.TencentCloudProvider{}
+}
+
+func init() {
+	registerProvider(newCmdTencentCloudImporter, newTencentCloudProvider)
 }

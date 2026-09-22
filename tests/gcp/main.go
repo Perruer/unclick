@@ -64,7 +64,6 @@ func main() {
 		Resources:   services,
 		PathPattern: cmd.DefaultPathPattern,
 		PathOutput:  cmd.DefaultPathOutput,
-		State:       "local",
 		Zone:        "europe-west1-a",
 		Connect:     true,
 	}, []string{zone})

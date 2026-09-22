@@ -1,3 +1,5 @@
+//go:build !slim || opal
+
 // Copyright 2022 The Terraformer Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,4 +45,8 @@ func newCmdOpalImporter(options ImportOptions) *cobra.Command {
 
 func newOpalProvider() terraformutils.ProviderGenerator {
 	return &opal_terraformer.OpalProvider{}
+}
+
+func init() {
+	registerProvider(newCmdOpalImporter, newOpalProvider)
 }

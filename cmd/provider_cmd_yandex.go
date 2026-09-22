@@ -1,3 +1,5 @@
+//go:build !slim || yandex
+
 // Copyright 2019 The Terraformer Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -56,4 +58,8 @@ func newCmdYandexImporter(options ImportOptions) *cobra.Command {
 
 func newYandexProvider() terraformutils.ProviderGenerator {
 	return &yandex_terraforming.YandexProvider{}
+}
+
+func init() {
+	registerProvider(newCmdYandexImporter, newYandexProvider)
 }

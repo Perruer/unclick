@@ -1,3 +1,5 @@
+//go:build !slim || alicloud
+
 // Copyright 2018 The Terraformer Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -51,4 +53,8 @@ func newCmdAliCloudImporter(options ImportOptions) *cobra.Command {
 
 func newAliCloudProvider() terraformutils.ProviderGenerator {
 	return &alicloud_terraforming.AliCloudProvider{}
+}
+
+func init() {
+	registerProvider(newCmdAliCloudImporter, newAliCloudProvider)
 }

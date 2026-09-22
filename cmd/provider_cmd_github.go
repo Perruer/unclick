@@ -1,3 +1,5 @@
+//go:build !slim || github
+
 // Copyright 2018 The Terraformer Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -55,4 +57,8 @@ func newCmdGithubImporter(options ImportOptions) *cobra.Command {
 
 func newGitHubProvider() terraformutils.ProviderGenerator {
 	return &github_terraforming.GithubProvider{}
+}
+
+func init() {
+	registerProvider(newCmdGithubImporter, newGitHubProvider)
 }

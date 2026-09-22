@@ -1,3 +1,5 @@
+//go:build !slim || ionoscloud
+
 // Copyright 2019 The Terraformer Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -42,4 +44,8 @@ func newCmdIonosCloudImporter(options ImportOptions) *cobra.Command {
 
 func newIonosCloudProvider() terraformutils.ProviderGenerator {
 	return &ionoscloud_terraformer.IonosCloudProvider{}
+}
+
+func init() {
+	registerProvider(newCmdIonosCloudImporter, newIonosCloudProvider)
 }

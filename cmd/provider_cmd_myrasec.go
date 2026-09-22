@@ -1,3 +1,5 @@
+//go:build !slim || myrasec
+
 package cmd
 
 import (
@@ -34,4 +36,8 @@ func newCmdMyrasecImporter(options ImportOptions) *cobra.Command {
 //
 func newMyrasecProvider() terraformutils.ProviderGenerator {
 	return &myrasec_terraforming.MyrasecProvider{}
+}
+
+func init() {
+	registerProvider(newCmdMyrasecImporter, newMyrasecProvider)
 }

@@ -4,12 +4,12 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/hashicorp/terraform/configs/configschema"
+	"github.com/Perruer/unclick/internal/schema"
 	"github.com/zclconf/go-cty/cty"
 )
 
 func TestIgnoredAttributes(t *testing.T) {
-	attributes := map[string]*configschema.Attribute{
+	attributes := map[string]*schema.Attribute{
 		"computed_attribute": {
 			Type:     cty.Number,
 			Computed: true,
@@ -21,33 +21,33 @@ func TestIgnoredAttributes(t *testing.T) {
 	}
 
 	testCases := map[string]struct {
-		block                map[string]*configschema.NestedBlock
+		block                map[string]*schema.NestedBlock
 		ignoredAttributes    []string
 		notIgnoredAttributes []string
 	}{
-		"nesting_set": {map[string]*configschema.NestedBlock{
+		"nesting_set": {map[string]*schema.NestedBlock{
 			"attribute_one": {
-				Block: configschema.Block{
+				Block: schema.Block{
 					Attributes: attributes,
 				},
-				Nesting: configschema.NestingSet,
+				Nesting: schema.NestingSet,
 			},
 		}, []string{"nesting_set.attribute_one.computed_attribute"},
 			[]string{"nesting_set.attribute_one.required_attribute"}},
-		"nesting_list": {map[string]*configschema.NestedBlock{
+		"nesting_list": {map[string]*schema.NestedBlock{
 			"attribute_one": {
-				Block: configschema.Block{
-					Attributes: map[string]*configschema.Attribute{},
-					BlockTypes: map[string]*configschema.NestedBlock{
+				Block: schema.Block{
+					Attributes: map[string]*schema.Attribute{},
+					BlockTypes: map[string]*schema.NestedBlock{
 						"attribute_two_nested": {
-							Nesting: configschema.NestingList,
-							Block: configschema.Block{
+							Nesting: schema.NestingList,
+							Block: schema.Block{
 								Attributes: attributes,
 							},
 						},
 					},
 				},
-				Nesting: configschema.NestingList,
+				Nesting: schema.NestingList,
 			},
 		}, []string{"nesting_list.0.attribute_one.0.attribute_two_nested.computed_attribute"},
 			[]string{"nesting_list.0.attribute_one.0.attribute_two_nested.required_attribute"}},
@@ -55,8 +55,7 @@ func TestIgnoredAttributes(t *testing.T) {
 
 	for key, tc := range testCases {
 		t.Run(key, func(t *testing.T) {
-			provider := ProviderWrapper{}
-			readOnlyAttributes := provider.readObjBlocks(tc.block, []string{}, key)
+			readOnlyAttributes := readObjBlocks(tc.block, []string{}, key)
 			for _, attr := range tc.ignoredAttributes {
 				if ignored := isAttributeIgnored(attr, readOnlyAttributes); !ignored {
 					t.Errorf("attribute \"%s\" was not ignored. Pattern list: %s", attr, readOnlyAttributes)
@@ -81,4 +80,37 @@ func isAttributeIgnored(name string, patterns []string) bool {
 		}
 	}
 	return ignored
+}
+
+func TestDeprecatedAttributesAreIgnored(t *testing.T) {
+	s := &schema.Provider{ResourceTypes: map[string]schema.Resource{
+		"github_repository": {Block: &schema.Block{
+			Attributes: map[string]*schema.Attribute{
+				"name":       {Type: cty.String, Required: true},
+				"visibility": {Type: cty.String, Optional: true, Computed: true},
+				"private":    {Type: cty.Bool, Optional: true, Computed: true, Deprecated: true},
+				"etag":       {Type: cty.String, Computed: true},
+			},
+			BlockTypes: map[string]*schema.NestedBlock{
+				"template": {Nesting: schema.NestingList, Block: schema.Block{
+					Attributes: map[string]*schema.Attribute{"owner": {Type: cty.String, Required: true}},
+				}},
+				"old_pages": {Nesting: schema.NestingList, Block: schema.Block{
+					Deprecated: true,
+					Attributes: map[string]*schema.Attribute{"branch": {Type: cty.String, Optional: true}},
+				}},
+			},
+		}},
+	}}
+	patterns := readOnlyAttributesOf(s, []string{"github_repository"})["github_repository"]
+	for _, key := range []string{"id", "private", "etag", "old_pages.#", "old_pages.0.branch"} {
+		if !isAttributeIgnored(key, patterns) {
+			t.Errorf("%s should be ignored; patterns: %v", key, patterns)
+		}
+	}
+	for _, key := range []string{"name", "visibility", "template.0.owner"} {
+		if isAttributeIgnored(key, patterns) {
+			t.Errorf("%s should be kept; patterns: %v", key, patterns)
+		}
+	}
 }

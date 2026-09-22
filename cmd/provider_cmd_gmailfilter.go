@@ -1,3 +1,5 @@
+//go:build !slim || gmailfilter
+
 // Copyright 2020 The Terraformer Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -48,4 +50,8 @@ func newCmdGmailfilterImporter(options ImportOptions) *cobra.Command {
 
 func newGmailfilterProvider() terraformutils.ProviderGenerator {
 	return &gmailfilter_terraforming.GmailfilterProvider{}
+}
+
+func init() {
+	registerProvider(newCmdGmailfilterImporter, newGmailfilterProvider)
 }

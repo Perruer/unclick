@@ -46,7 +46,6 @@ func main() {
 		Resources:   services,
 		PathPattern: cmd.DefaultPathPattern,
 		PathOutput:  cmd.DefaultPathOutput,
-		State:       "local",
 		Connect:     true,
 	}, []string{endpoint, username, password})
 	if err != nil {

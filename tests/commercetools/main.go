@@ -49,7 +49,6 @@ func main() {
 		Resources:   services,
 		PathPattern: cmd.DefaultPathPattern,
 		PathOutput:  cmd.DefaultPathOutput,
-		State:       "local",
 		Connect:     true,
 	}, []string{clientID, clientScope, clientSecret, projectKey, baseURL, tokenURL})
 	if err != nil {

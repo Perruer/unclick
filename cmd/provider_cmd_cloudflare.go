@@ -1,3 +1,5 @@
+//go:build !slim || cloudflare
+
 // Copyright 2019 The Terraformer Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -42,4 +44,8 @@ func newCmdCloudflareImporter(options ImportOptions) *cobra.Command {
 
 func newCloudflareProvider() terraformutils.ProviderGenerator {
 	return &cloudflare_terraforming.CloudflareProvider{}
+}
+
+func init() {
+	registerProvider(newCmdCloudflareImporter, newCloudflareProvider)
 }

@@ -1,3 +1,5 @@
+//go:build !slim || newrelic
+
 // Copyright 2019 The Terraformer Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -48,4 +50,8 @@ func newCmdNewRelicImporter(options ImportOptions) *cobra.Command {
 
 func newNewRelicProvider() terraformutils.ProviderGenerator {
 	return &newrelic_terraforming.NewRelicProvider{}
+}
+
+func init() {
+	registerProvider(newCmdNewRelicImporter, newNewRelicProvider)
 }

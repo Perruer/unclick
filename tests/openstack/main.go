@@ -42,7 +42,6 @@ func main() {
 		Resources:   services,
 		PathPattern: cmd.DefaultPathPattern,
 		PathOutput:  cmd.DefaultPathOutput,
-		State:       "local",
 		Connect:     true,
 	}, []string{region})
 	if err != nil {

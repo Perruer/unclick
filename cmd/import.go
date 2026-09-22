@@ -16,7 +16,6 @@ package cmd
 import (
 	"fmt"
 	"log"
-	"os"
 	"sort"
 	"strings"
 	"sync"
@@ -38,8 +37,6 @@ type ImportOptions struct {
 	Excludes      []string
 	PathPattern   string
 	PathOutput    string
-	State         string
-	Bucket        string
 	Profile       string
 	Verbose       bool
 	Zone          string
@@ -56,9 +53,12 @@ type ImportOptions struct {
 	RetrySleepMs  int
 }
 
-const DefaultPathPattern = "{output}/{provider}/{service}/"
+// DefaultPathPattern puts every service of a provider into one root module,
+// so that resources reference each other directly and one `tofu plan`
+// adopts everything. Use "{output}/{provider}/{service}/" for one module per
+// service.
+const DefaultPathPattern = "{output}/{provider}/"
 const DefaultPathOutput = "generated"
-const DefaultState = "local"
 
 func newImportCmd() *cobra.Command {
 	options := ImportOptions{}
@@ -256,105 +256,42 @@ func printService(provider terraformutils.ProviderGenerator, serviceName string,
 	if err != nil {
 		return err
 	}
-	tfStateFile, err := terraformutils.PrintTfState(resources)
+	// Import blocks let `tofu plan` adopt the existing objects. Terraformer
+	// wrote a version 3 state file instead, which OpenTofu and Terraform
+	// upgrade with the wrong provider address for most providers not
+	// published by HashiCorp.
+	if err := terraformoutput.OutputImportFile(resources, path); err != nil {
+		return err
+	}
+	// With one directory per service, references to another service go
+	// through that directory's state, which exists once it has been applied.
+	// In a single directory, ConnectServices links resources directly.
+	if serviceName == "" || !options.Connect || len(provider.GetResourceConnections()[serviceName]) == 0 {
+		return nil
+	}
+	remoteStates := map[string]interface{}{}
+	for k := range provider.GetResourceConnections()[serviceName] {
+		if _, exist := importedResource[k]; !exist {
+			continue
+		}
+		remoteStates[k] = map[string]interface{}{
+			"backend": "local",
+			"config": map[string]interface{}{
+				"path": strings.Repeat("../", strings.Count(path, "/")) + strings.ReplaceAll(path, serviceName, k) + "terraform.tfstate",
+			},
+		}
+	}
+	if len(remoteStates) == 0 {
+		return nil
+	}
+	variables := map[string]map[string]map[string]interface{}{
+		"data": {"terraform_remote_state": remoteStates},
+	}
+	variablesFile, err := terraformutils.Print(variables, map[string]struct{}{"config": {}}, options.Output, !options.NoSort)
 	if err != nil {
 		return err
 	}
-	// print or upload State file
-	if options.State == "bucket" {
-		log.Println(provider.GetName() + " upload tfstate to  bucket " + options.Bucket)
-		bucket := terraformoutput.BucketState{
-			Name: options.Bucket,
-		}
-		if err := bucket.BucketUpload(path, tfStateFile); err != nil {
-			return err
-		}
-		// create Bucket file
-		if bucketStateDataFile, err := terraformutils.Print(bucket.BucketGetTfData(path), map[string]struct{}{}, options.Output, !options.NoSort); err == nil {
-			terraformoutput.PrintFile(path+"/bucket.tf", bucketStateDataFile)
-		}
-	} else {
-		if serviceName == "" {
-			log.Println(provider.GetName() + " save tfstate")
-		} else {
-			log.Println(provider.GetName() + " save tfstate for " + serviceName)
-		}
-		if err := os.WriteFile(path+"/terraform.tfstate", tfStateFile, os.ModePerm); err != nil {
-			return err
-		}
-	}
-	// Print hcl variables.tf
-	if serviceName != "" {
-		if options.Connect && len(provider.GetResourceConnections()[serviceName]) > 0 {
-			variables := map[string]map[string]map[string]interface{}{}
-			variables["data"] = map[string]map[string]interface{}{}
-			variables["data"]["terraform_remote_state"] = map[string]interface{}{}
-			if options.State == "bucket" {
-				bucket := terraformoutput.BucketState{
-					Name: options.Bucket,
-				}
-				for k := range provider.GetResourceConnections()[serviceName] {
-					if _, exist := importedResource[k]; !exist {
-						continue
-					}
-					variables["data"]["terraform_remote_state"][k] = map[string]interface{}{
-						"backend": "gcs",
-						"config":  bucket.BucketGetTfData(strings.ReplaceAll(path, serviceName, k)),
-					}
-				}
-			} else {
-				for k := range provider.GetResourceConnections()[serviceName] {
-					if _, exist := importedResource[k]; !exist {
-						continue
-					}
-					variables["data"]["terraform_remote_state"][k] = map[string]interface{}{
-						"backend": "local",
-						"config": map[string]interface{}{
-							"path": strings.Repeat("../", strings.Count(path, "/")) + strings.ReplaceAll(path, serviceName, k) + "terraform.tfstate",
-						},
-					}
-				}
-			}
-			// create variables file
-			if len(provider.GetResourceConnections()[serviceName]) > 0 && options.Connect && len(variables["data"]["terraform_remote_state"]) > 0 {
-				variablesFile, err := terraformutils.Print(variables, map[string]struct{}{"config": {}}, options.Output, !options.NoSort)
-				if err != nil {
-					return err
-				}
-				terraformoutput.PrintFile(path+"/variables."+terraformoutput.GetFileExtension(options.Output), variablesFile)
-			}
-		}
-	} else {
-		if options.Connect {
-			variables := map[string]map[string]map[string]interface{}{}
-			variables["data"] = map[string]map[string]interface{}{}
-			variables["data"]["terraform_remote_state"] = map[string]interface{}{}
-			if options.State == "bucket" {
-				bucket := terraformoutput.BucketState{
-					Name: options.Bucket,
-				}
-				variables["data"]["terraform_remote_state"]["local"] = map[string]interface{}{
-					"backend": "gcs",
-					"config":  bucket.BucketGetTfData(path),
-				}
-			} else {
-				variables["data"]["terraform_remote_state"]["local"] = map[string]interface{}{
-					"backend": "local",
-					"config": map[string]interface{}{
-						"path": "terraform.tfstate",
-					},
-				}
-			}
-			// create variables file
-			if options.Connect {
-				variablesFile, err := terraformutils.Print(variables, map[string]struct{}{"config": {}}, options.Output, !options.NoSort)
-				if err != nil {
-					return err
-				}
-				terraformoutput.PrintFile(path+"/variables."+terraformoutput.GetFileExtension(options.Output), variablesFile)
-			}
-		}
-	}
+	terraformoutput.PrintFile(path+"/variables."+terraformoutput.GetFileExtension(options.Output), variablesFile)
 	return nil
 }
 
@@ -399,12 +336,12 @@ func baseProviderFlags(flag *pflag.FlagSet, options *ImportOptions, sampleRes, s
 	flag.StringSliceVarP(&options.Excludes, "excludes", "x", []string{}, sampleRes)
 	flag.StringVarP(&options.PathPattern, "path-pattern", "p", DefaultPathPattern, "{output}/{provider}/")
 	flag.StringVarP(&options.PathOutput, "path-output", "o", DefaultPathOutput, "")
-	flag.StringVarP(&options.State, "state", "s", DefaultState, "local or bucket")
-	flag.StringVarP(&options.Bucket, "bucket", "b", "", "gs://terraform-state")
 	flag.StringSliceVarP(&options.Filter, "filter", "f", []string{}, sampleFilters)
 	flag.BoolVarP(&options.Verbose, "verbose", "v", false, "")
 	flag.BoolVarP(&options.NoSort, "no-sort", "S", false, "set to disable sorting of HCL")
 	flag.StringVarP(&options.Output, "output", "O", "hcl", "output format hcl or json")
 	flag.IntVarP(&options.RetryCount, "retry-number", "n", 5, "number of retries to perform when refresh fails")
 	flag.IntVarP(&options.RetrySleepMs, "retry-sleep-ms", "m", 300, "time in ms to sleep between retries")
+	flag.StringVar(&providerwrapper.TFBinary, "tf-binary", providerwrapper.TFBinary, "tofu or terraform executable used to download providers (default: tofu, then terraform, from PATH)")
+	flag.StringVar(&providerwrapper.ProviderVersion, "provider-version", providerwrapper.ProviderVersion, "version constraint for the provider plugin, e.g. \"~> 6.0\" (default: newest installed, else newest available)")
 }

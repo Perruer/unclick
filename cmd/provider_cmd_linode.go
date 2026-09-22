@@ -1,3 +1,5 @@
+//go:build !slim || linode
+
 // Copyright 2019 The Terraformer Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -42,4 +44,8 @@ func newCmdLinodeImporter(options ImportOptions) *cobra.Command {
 
 func newLinodeProvider() terraformutils.ProviderGenerator {
 	return &linode_terraforming.LinodeProvider{}
+}
+
+func init() {
+	registerProvider(newCmdLinodeImporter, newLinodeProvider)
 }

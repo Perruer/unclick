@@ -21,6 +21,8 @@ import (
 
 func NewCmdRoot() *cobra.Command {
 	cmd := &cobra.Command{
+		Use:           "unclick",
+		Short:         "Turn existing cloud resources into OpenTofu / Terraform code",
 		SilenceUsage:  true,
 		SilenceErrors: true,
 		Version:       version,
@@ -36,112 +38,32 @@ func Execute() error {
 	return cmd.Execute()
 }
 
+// registeredProvider is one provider compiled into this binary. Each
+// provider_cmd_*.go file registers itself, so a build with `-tags slim,aws`
+// contains only the AWS importer.
+type registeredProvider struct {
+	importer  func(options ImportOptions) *cobra.Command
+	generator func() terraformutils.ProviderGenerator
+}
+
+var registeredProviders []registeredProvider
+
+func registerProvider(importer func(options ImportOptions) *cobra.Command, generator func() terraformutils.ProviderGenerator) {
+	registeredProviders = append(registeredProviders, registeredProvider{importer: importer, generator: generator})
+}
+
 func providerImporterSubcommands() []func(options ImportOptions) *cobra.Command {
-	return []func(options ImportOptions) *cobra.Command{
-		// Major Cloud
-		newCmdGoogleImporter,
-		newCmdAwsImporter,
-		newCmdAzureImporter,
-		newCmdAliCloudImporter,
-		newCmdIbmImporter,
-		// Cloud
-		newCmdDigitalOceanImporter,
-		newCmdEquinixMetalImporter,
-		newCmdHerokuImporter,
-		newCmdLaunchDarklyImporter,
-		newCmdLinodeImporter,
-		newCmdOpenStackImporter,
-		newCmdTencentCloudImporter,
-		newCmdVultrImporter,
-		newCmdYandexImporter,
-		newCmdIonosCloudImporter,
-		// Infrastructure Software
-		newCmdKubernetesImporter,
-		newCmdOctopusDeployImporter,
-		newCmdRabbitMQImporter,
-		// Network
-		newCmdMyrasecImporter,
-		newCmdCloudflareImporter,
-		newCmdFastlyImporter,
-		newCmdNs1Importer,
-		newCmdPanosImporter,
-		// VCS
-		newCmdAzureDevOpsImporter,
-		newCmdAzureADImporter,
-		newCmdGithubImporter,
-		newCmdGitLabImporter,
-		// Monitoring & System Management
-		newCmdDatadogImporter,
-		newCmdNewRelicImporter,
-		newCmdMackerelImporter,
-		newCmdGrafanaImporter,
-		newCmdPagerDutyImporter,
-		newCmdOpsgenieImporter,
-		newCmdHoneycombioImporter,
-		newCmdOpalImporter,
-		// Community
-		newCmdKeycloakImporter,
-		newCmdLogzioImporter,
-		newCmdCommercetoolsImporter,
-		newCmdMikrotikImporter,
-		newCmdXenorchestraImporter,
-		newCmdGmailfilterImporter,
-		newCmdVaultImporter,
-		newCmdOktaImporter,
-		newCmdAuth0Importer,
+	list := make([]func(options ImportOptions) *cobra.Command, 0, len(registeredProviders))
+	for _, p := range registeredProviders {
+		list = append(list, p.importer)
 	}
+	return list
 }
 
 func providerGenerators() map[string]func() terraformutils.ProviderGenerator {
-	list := make(map[string]func() terraformutils.ProviderGenerator)
-	for _, providerGen := range []func() terraformutils.ProviderGenerator{
-		// Major Cloud
-		newGoogleProvider,
-		newAWSProvider,
-		newAzureProvider,
-		newAliCloudProvider,
-		newIbmProvider,
-		// Cloud
-		newDigitalOceanProvider,
-		newEquinixMetalProvider,
-		newFastlyProvider,
-		newHerokuProvider,
-		newLaunchDarklyProvider,
-		newLinodeProvider,
-		newNs1Provider,
-		newOpenStackProvider,
-		newTencentCloudProvider,
-		newVultrProvider,
-		// Infrastructure Software
-		newKubernetesProvider,
-		newOctopusDeployProvider,
-		newRabbitMQProvider,
-		// Network
-		newMyrasecProvider,
-		newCloudflareProvider,
-		// VCS
-		newAzureDevOpsProvider,
-		newAzureADProvider,
-		newGitHubProvider,
-		newGitLabProvider,
-		// Monitoring & System Management
-		newDataDogProvider,
-		newNewRelicProvider,
-		newPagerDutyProvider,
-		newHoneycombioProvider,
-		newOpalProvider,
-		// Community
-		newKeycloakProvider,
-		newLogzioProvider,
-		newCommercetoolsProvider,
-		newMikrotikProvider,
-		newXenorchestraProvider,
-		newGmailfilterProvider,
-		newVaultProvider,
-		newOktaProvider,
-		newAuth0Provider,
-	} {
-		list[providerGen().GetName()] = providerGen
+	list := make(map[string]func() terraformutils.ProviderGenerator, len(registeredProviders))
+	for _, p := range registeredProviders {
+		list[p.generator().GetName()] = p.generator
 	}
 	return list
 }

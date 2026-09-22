@@ -1,3 +1,5 @@
+//go:build !slim || grafana
+
 // Copyright 2018 The Terraformer Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -41,4 +43,8 @@ func newCmdGrafanaImporter(options ImportOptions) *cobra.Command {
 
 func newGrafanaProvider() terraformutils.ProviderGenerator {
 	return &grafana.GrafanaProvider{}
+}
+
+func init() {
+	registerProvider(newCmdGrafanaImporter, newGrafanaProvider)
 }

@@ -1,3 +1,5 @@
+//go:build !slim || mikrotik
+
 // Copyright 2019 The Terraformer Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -41,4 +43,8 @@ func newCmdMikrotikImporter(options ImportOptions) *cobra.Command {
 
 func newMikrotikProvider() terraformutils.ProviderGenerator {
 	return &mikrotik_terraforming.MikrotikProvider{}
+}
+
+func init() {
+	registerProvider(newCmdMikrotikImporter, newMikrotikProvider)
 }

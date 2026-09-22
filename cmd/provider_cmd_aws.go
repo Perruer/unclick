@@ -1,3 +1,5 @@
+//go:build !slim || aws
+
 // Copyright 2018 The Terraformer Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -136,4 +138,8 @@ func contains(s []string, e string) bool {
 		}
 	}
 	return false
+}
+
+func init() {
+	registerProvider(newCmdAwsImporter, newAWSProvider)
 }

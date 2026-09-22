@@ -1,3 +1,5 @@
+//go:build !slim || commercetools
+
 // Copyright 2018 The Terraformer Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -72,4 +74,8 @@ func newCmdCommercetoolsImporter(options ImportOptions) *cobra.Command {
 
 func newCommercetoolsProvider() terraformutils.ProviderGenerator {
 	return &commercetools_terraforming.CommercetoolsProvider{}
+}
+
+func init() {
+	registerProvider(newCmdCommercetoolsImporter, newCommercetoolsProvider)
 }

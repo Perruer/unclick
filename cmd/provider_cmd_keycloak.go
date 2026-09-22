@@ -1,3 +1,5 @@
+//go:build !slim || keycloak
+
 // Copyright 2018 The Terraformer Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -104,4 +106,8 @@ func newCmdKeycloakImporter(options ImportOptions) *cobra.Command {
 
 func newKeycloakProvider() terraformutils.ProviderGenerator {
 	return &keycloak_terraforming.KeycloakProvider{}
+}
+
+func init() {
+	registerProvider(newCmdKeycloakImporter, newKeycloakProvider)
 }

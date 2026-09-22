@@ -1,3 +1,5 @@
+//go:build !slim || azuredevops
+
 // Copyright 2019 The Terraformer Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -42,4 +44,8 @@ func newCmdAzureDevOpsImporter(options ImportOptions) *cobra.Command {
 
 func newAzureDevOpsProvider() terraformutils.ProviderGenerator {
 	return &azuredevops.AzureDevOpsProvider{}
+}
+
+func init() {
+	registerProvider(newCmdAzureDevOpsImporter, newAzureDevOpsProvider)
 }

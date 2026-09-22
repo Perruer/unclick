@@ -1,3 +1,5 @@
+//go:build !slim || pagerduty
+
 // Copyright 2019 The Terraformer Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -44,4 +46,8 @@ func newCmdPagerDutyImporter(options ImportOptions) *cobra.Command {
 
 func newPagerDutyProvider() terraformutils.ProviderGenerator {
 	return &pagerduty_terraforming.PagerDutyProvider{}
+}
+
+func init() {
+	registerProvider(newCmdPagerDutyImporter, newPagerDutyProvider)
 }

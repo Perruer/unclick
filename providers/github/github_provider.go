@@ -91,13 +91,16 @@ func (p *GithubProvider) Init(args []string) error {
 	}
 
 	p.owner = args[0]
-	if len(args) < 2 {
-		if os.Getenv("GITHUB_TOKEN") == "" {
-			return errors.New("token requirement")
-		}
-		p.token = os.Getenv("GITHUB_TOKEN")
-	} else {
+	// The CLI always passes the --token flag, empty when it was not given,
+	// so fall back to GITHUB_TOKEN whenever it is empty.
+	if len(args) > 1 {
 		p.token = args[1]
+	}
+	if p.token == "" {
+		p.token = os.Getenv("GITHUB_TOKEN")
+	}
+	if p.token == "" && p.appID == 0 {
+		return errors.New("a token is required: pass --token or set GITHUB_TOKEN")
 	}
 	if len(args) > 2 {
 		if args[2] != "" {
