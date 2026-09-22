@@ -6,7 +6,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const version = "v1.0.0-dev"
+// version is set at build time from the release tag.
+var version = "v1.0.0-dev"
 
 var versionCmd = &cobra.Command{
 	Use:   "version",

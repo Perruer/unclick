@@ -1,0 +1,41 @@
+# Release builds: one binary with every provider per platform.
+# Run by .github/workflows/release.yaml when a v* tag is pushed.
+version: 2
+project_name: unclick
+
+builds:
+  - main: .
+    binary: unclick
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w -X github.com/Perruer/unclick/cmd.version=v{{ .Version }}
+    goos: [linux, darwin, windows]
+    goarch: [amd64, arm64]
+    ignore:
+      - goos: windows
+        goarch: arm64
+
+archives:
+  - formats: [tar.gz]
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+    files:
+      - LICENSE
+      - NOTICE
+      - LICENSES/*
+      - README.md
+      - README.ru.md
+      - CHANGELOG.md
+
+checksum:
+  name_template: checksums.txt
+
+changelog:
+  disable: true
+
+release:
+  draft: true

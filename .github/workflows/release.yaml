@@ -1,39 +1,31 @@
-name: "tagged-release"
+name: release
+
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: Bump Version
-        required: true
+  push:
+    tags:
+    - "v*"
+
+permissions:
+  contents: write
+
 jobs:
-  tagged-release:
-    name: "Tagged Release"
-    runs-on: "ubuntu-latest"
-
+  release:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Install Go
-        uses: actions/setup-go@v5
-        with:
-          go-version-file: go.mod
-          cache: true
-      - name: Test
-        run: go build -v && go test ./...
-      - name: Build for linux/amd64
-        run: go build -o unclick-all-linux-amd64
-      - name: Build for linux/arm64
-        run: GOOS=linux GOARCH=arm64 go build -o unclick-all-linux-arm64
-      - name: Build for mac
-        run: GOOS=darwin go build -o unclick-all-darwin-amd64
-      - name: Build for mac Apple Silicon
-        run: GOOS=darwin GOARCH=arm64 go build -o unclick-all-darwin-arm64
-      - name: Build for all providers
-        run: go run build/multi-build/main.go
-
-      - uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: ${{ github.event.inputs.version }}
-          prerelease: false
-          files: |
-            unclick-*
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - uses: actions/setup-go@v5
+      with:
+        go-version-file: go.mod
+        cache: true
+    - name: Test
+      run: go test ./...
+    - uses: goreleaser/goreleaser-action@v6
+      with:
+        version: "~> v2"
+        # Every binary links all cloud SDKs; two at a time fit in the
+        # runner's memory.
+        args: release --clean --parallelism 2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
