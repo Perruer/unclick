@@ -5,7 +5,7 @@ Example:
 ```
 $ export TENCENTCLOUD_SECRET_ID=<SECRET_ID>
 $ export TENCENTCLOUD_SECRET_KEY=<SECRET_KEY>
-$ terraformer import tencentcloud --resources=cvm,cbs --regions=ap-guangzhou
+$ unclick import tencentcloud --resources=cvm,cbs --regions=ap-guangzhou
 ```
 
 List of supported TencentCloud services:

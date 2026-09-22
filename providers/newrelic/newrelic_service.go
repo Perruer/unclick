@@ -15,7 +15,7 @@
 package newrelic
 
 import (
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/terraformutils"
 	newrelic "github.com/newrelic/newrelic-client-go/newrelic"
 )
 

@@ -4,7 +4,7 @@
 
 ```sh
 export HONEYCOMB_API_KEY=MYAPIKEY
-./terraformer import honeycombio --resources=board,trigger
+./unclick import honeycombio --resources=board,trigger
 ```
 
 #### List of supported Honeycomb resources
@@ -31,5 +31,5 @@ If you wish to import a specific list of datasets *including* environment-wide a
 
 ```sh
 export HONEYCOMB_API_KEY=MYAPIKEY
-./terraformer import honeycombio --resources=derived_column,board --datasets=__all__,my.service
+./unclick import honeycombio --resources=derived_column,board --datasets=__all__,my.service
 ```

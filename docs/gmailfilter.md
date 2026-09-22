@@ -16,7 +16,7 @@ gcloud auth application-default login \
 https://www.googleapis.com/auth/gmail.labels,\
 https://www.googleapis.com/auth/gmail.settings.basic
 
-./terraformer import gmailfilter -r=filter,label
+./unclick import gmailfilter -r=filter,label
 ```
 
 List of supported GmailFilter resources:

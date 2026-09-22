@@ -21,7 +21,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils/providerwrapper"
+	"github.com/Perruer/unclick/terraformutils/providerwrapper"
 	"github.com/hashicorp/terraform/terraform"
 	"github.com/zclconf/go-cty/cty"
 )

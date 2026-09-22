@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/terraformutils"
 	mgo "github.com/Myra-Security-GmbH/myrasec-go/v2"
 )
 

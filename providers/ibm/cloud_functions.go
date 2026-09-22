@@ -21,7 +21,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/terraformutils"
 	bluemix "github.com/IBM-Cloud/bluemix-go"
 
 	ns "github.com/IBM-Cloud/bluemix-go/api/functions"

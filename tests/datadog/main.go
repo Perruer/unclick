@@ -23,8 +23,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/GoogleCloudPlatform/terraformer/cmd"
-	datadog_terraforming "github.com/GoogleCloudPlatform/terraformer/providers/datadog"
+	"github.com/Perruer/unclick/cmd"
+	datadog_terraforming "github.com/Perruer/unclick/providers/datadog"
 )
 
 func main() {
@@ -96,7 +96,7 @@ func main() {
 		log.Fatal("Error while destroying resources ", err)
 	}
 
-	log.Print("Successfully created and imported resources with Terraformer")
+	log.Print("Successfully created and imported resources with Unclick")
 }
 
 func terraformerResourcesTest(cfg *Config, resourcesMap *map[string][]string) error {

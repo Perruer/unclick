@@ -17,8 +17,8 @@ package alicloud
 import (
 	"strings"
 
-	"github.com/GoogleCloudPlatform/terraformer/providers/alicloud/connectivity"
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/providers/alicloud/connectivity"
+	"github.com/Perruer/unclick/terraformutils"
 	"github.com/aliyun/alibaba-cloud-sdk-go/sdk/requests"
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/ecs"
 )

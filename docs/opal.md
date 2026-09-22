@@ -1,11 +1,11 @@
-# Use terraformer with [Opal](https://opal.dev)
+# Use unclick with [Opal](https://opal.dev)
 
 ##  Usage
 ### 1. Installation
-First you will need to install terraformer with the opal provider. See the [readme](https://github.com/GoogleCloudPlatform/terraformer#installation).
+First you will need to install unclick with the opal provider. See the [readme](../README.md#installation).
 
 ### 2. Set up a template terraform workspace
-Before you can use terraformer, you need to create a template workspace so that terraformer
+Before you can use unclick, you need to create a template workspace so that unclick
 can access the [opalsecurity/opal](https://registry.terraform.io/providers/opalsecurity/opal/latest) provider.
 
 To do this, create a new directory with a basic `provider.tf` file:
@@ -31,19 +31,19 @@ $ terraform init
 
 You should see the output: `Terraform has been successfully initialized!`
 
-### 3. Run terraformer:
+### 3. Run unclick:
 
 ```bash
 export OPAL_AUTH_TOKEN=Your token from https://app.opal.dev/settings#api
 # If you are running an on-prem installation, you will need to provide a base url as well:
 # export OPAL_BASE_URL=Your token from https://my.opal.com
 
-./terraformer import opal --resources=* --path-pattern {output}/{provider}
+./unclick import opal --resources=* --path-pattern {output}/{provider}
 ```
 
 You can also specify only certain kinds of resources to import as well, i.e. `--resources=owner`.
 
-Note that we currently do not support the terraformer `--filter` flag.
+Note that we currently do not support the unclick `--filter` flag.
 
 ### 4. Inspect the imported terraform files
 

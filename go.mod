@@ -1,4 +1,4 @@
-module github.com/GoogleCloudPlatform/terraformer
+module github.com/Perruer/unclick
 
 go 1.24.0
 require (

@@ -4,8 +4,8 @@ import (
 	"context"
 	"log"
 
-	"github.com/GoogleCloudPlatform/terraformer/providers/ionoscloud/helpers"
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/providers/ionoscloud/helpers"
+	"github.com/Perruer/unclick/terraformutils"
 )
 
 type KubernetesClusterGenerator struct {

@@ -17,7 +17,7 @@ package panos
 import (
 	"errors"
 
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/terraformutils"
 )
 
 type PanosService struct { //nolint

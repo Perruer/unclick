@@ -4,7 +4,7 @@ Example:
 
 ```
 export LAUNCHDARKLY_ACCESS_TOKEN=[LAUNCHDARKLY_ACCESS_TOKEN]
-./terraformer import launchdarkly -r project
+./unclick import launchdarkly -r project
 ```
 
 List of supported LaunchDarkly resources:

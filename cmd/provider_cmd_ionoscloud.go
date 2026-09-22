@@ -14,9 +14,9 @@
 package cmd
 
 import (
-	ionoscloud_terraformer "github.com/GoogleCloudPlatform/terraformer/providers/ionoscloud"
+	ionoscloud_terraformer "github.com/Perruer/unclick/providers/ionoscloud"
 
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/terraformutils"
 	"github.com/spf13/cobra"
 )
 

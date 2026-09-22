@@ -17,7 +17,7 @@ package pagerduty
 import (
 	"fmt"
 
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/terraformutils"
 	pagerduty "github.com/heimweh/go-pagerduty/pagerduty"
 )
 

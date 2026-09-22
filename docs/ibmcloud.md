@@ -1,6 +1,6 @@
 ### Use with IBM Cloud
 
-If you want to run Terraformer with the IBM Cloud provider plugin on your system, complete the following steps:
+If you want to run Unclick with the IBM Cloud provider plugin on your system, complete the following steps:
 
 
 1. Export IBM Cloud API key as environment variables.
@@ -8,15 +8,15 @@ If you want to run Terraformer with the IBM Cloud provider plugin on your system
 
     ```
     export IC_API_KEY=<IBMCLOUD_API_KEY>
-    terraformer import ibm -r ibm_cos,ibm_iam....
+    unclick import ibm -r ibm_cos,ibm_iam....
     ```
 2. Use flag for Resource Group to classify resources accordingly.
     Example:
 
     ```
     export IC_API_KEY=<IBMCLOUD_API_KEY>
-    terraformer import ibm --resources=ibm_is_vpc --resource_group=default
-    terraformer import ibm --resources=ibm_function --region=us-south
+    unclick import ibm --resources=ibm_is_vpc --resource_group=default
+    unclick import ibm --resources=ibm_function --region=us-south
     ```
 List of supported IBM Cloud resources:
 

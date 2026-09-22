@@ -18,7 +18,7 @@ When importing apps, their settable config vars (those not from add-ons) are add
 
 #### Builds
 
-The imported configuration cannot build & launch apps in a new place. To launch apps that have been imported with Terraformer, one of the following is required:
+The imported configuration cannot build & launch apps in a new place. To launch apps that have been imported with Unclick, one of the following is required:
 * source pushed to the new Heroku apps, `git push heroku master` from each app's repo
 * new apps added to an existing Heroku pipelines and promoted to, via the web dashbord or CLI
 * new apps connected for GitHub deployments, via the web dashboard
@@ -32,20 +32,20 @@ The imported configuration cannot build & launch apps in a new place. To launch 
 export HEROKU_API_KEY=<token>
 
 # All team's apps
-./terraformer import heroku --resources=app --team=<NAME>
+./unclick import heroku --resources=app --team=<NAME>
 
 # Specific app(s), by UUID
-./terraformer import heroku --resources=app --filter=app=<ID>
-./terraformer import heroku --resources=app --filter=app=<ID>:<ID2>:<ID3>
+./unclick import heroku --resources=app --filter=app=<ID>
+./unclick import heroku --resources=app --filter=app=<ID>:<ID2>:<ID3>
 
 # Output directory
-./terraformer import heroku --resources=app --filter=app=<ID> --path-pattern='{output}/{provider}/<DIRECTORY NAME>'
+./unclick import heroku --resources=app --filter=app=<ID> --path-pattern='{output}/{provider}/<DIRECTORY NAME>'
 
 # All enabled features of HEROKU_API_KEY's Heroku account
-./terraformer import heroku --resources=account_feature
+./unclick import heroku --resources=account_feature
 ```
 
-Heroku Terraformer resources with the terraform-provider-heroku resources they import:
+Heroku Unclick resources with the terraform-provider-heroku resources they import:
 
 *   `account_feature`
     * `heroku_account_feature`

@@ -4,7 +4,7 @@ Example:
 
 ```
 export DIGITALOCEAN_TOKEN=[DIGITALOCEAN_TOKEN]
-./terraformer import digitalocean -r project,droplet
+./unclick import digitalocean -r project,droplet
 ```
 
 List of supported DigitalOcean resources:

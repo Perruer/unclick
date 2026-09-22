@@ -6,12 +6,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const version = "v0.8.30"
+const version = "v1.0.0-dev"
 
 var versionCmd = &cobra.Command{
 	Use:   "version",
-	Short: "Print the version number of Terraformer",
+	Short: "Print the version number of Unclick",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Terraformer " + version)
+		fmt.Println("Unclick " + version)
 	},
 }

@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/go-azure-helpers/authentication"
 
 	"github.com/Azure/azure-sdk-for-go/services/web/mgmt/2019-08-01/web"
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/terraformutils"
 )
 
 type AppServiceGenerator struct {

@@ -22,7 +22,7 @@ import (
 	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/services/datafactory/mgmt/2018-06-01/datafactory"
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/terraformutils"
 )
 
 type DataFactoryGenerator struct {
@@ -117,7 +117,7 @@ func (az *DataFactoryGenerator) appendResourceFrom(resources []terraformutils.Re
 	if azureType != "" {
 		resourceType := getResourceTypeFrom(azureType)
 		if resourceType == "" {
-			msg := fmt.Sprintf(`azurerm_data_factory: resource "%s" id: %s type: %s not handled yet by terraform or terraformer`, name, id, azureType)
+			msg := fmt.Sprintf(`azurerm_data_factory: resource "%s" id: %s type: %s not handled yet by terraform or unclick`, name, id, azureType)
 			log.Println(msg)
 		} else {
 			resources = az.appendResourceAs(resources, id, name, resourceType, "adf")

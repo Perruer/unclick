@@ -5,7 +5,7 @@ Example using a Myra Security API Key and corresponding Token:
 ```
 export MYRASEC_API_SECRET=[MYRASEC_API_SECRET]
 export MYRASEC_API_KEY=[MYRASEC_API_KEY]
-./terraformer import myrasec --resources=domain
+./unclick import myrasec --resources=domain
 ```
 
 List of supported Myra Security services:

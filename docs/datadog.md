@@ -1,13 +1,13 @@
-# Use Terraformer with [Datadog](https://www.datadoghq.com/)
+# Use Unclick with [Datadog](https://www.datadoghq.com/)
 
 This provider uses the [terraform-provider-datadog](https://registry.terraform.io/providers/DataDog/datadog/latest).
 
 ##  Usage
 ### 1. Installation
-First you will need to install Terraformer with the Datadog provider. See the [README](https://github.com/GoogleCloudPlatform/terraformer#installation).
+First you will need to install Unclick with the Datadog provider. See the [README](../README.md#installation).
 
 ### 2. Set up a template Terraform workspace
-Before you can use Terraformer, you need to create a template workspace so that Terraformer
+Before you can use Unclick, you need to create a template workspace so that Unclick
 can access the [DataDog/datadog](https://registry.terraform.io/providers/DataDog/datadog/latest) provider.
 
 To do this, create a new directory with a basic `provider.tf` file:
@@ -33,14 +33,14 @@ $ terraform init
 
 You should see the output: `Terraform has been successfully initialized!`
 
-### 3. Run Terraformer
+### 3. Run Unclick
 
 ```bash
 export DATADOG_API_KEY=Datadog API key. More information on this at https://docs.datadoghq.com/account_management/api-app-keys/ 
 export DATADOG_HOST=Datadog API host i.e. https://api.datadoghq.eu which can be found at https://docs.datadoghq.com/getting_started/site/#access-the-datadog-site
 export DATADOG_APP_KEY=Datadog APP key. More information on this at https://docs.datadoghq.com/account_management/api-app-keys/ 
 
-./terraformer import datadog --resources=* 
+./unclick import datadog --resources=* 
 ```
 
 You can also specify only certain kinds of resources to import as well, i.e. `--resources=dashboard`.
@@ -63,20 +63,20 @@ Filtering based on Tags follows the convention `--filter="Name=tags;Value='your 
 
 ```bash
 # Import monitors based on multiple tags
-./terraformer import datadog --resources=monitor --filter="Name=tags;Value='foo:bar'" --filter="Name=tags;Value='env:production'"
+./unclick import datadog --resources=monitor --filter="Name=tags;Value='foo:bar'" --filter="Name=tags;Value='env:production'"
 
 # Import monitor where tag doesn't include colon
-./terraformer import datadog --resources=monitor --filter="Name=tags;Value=anExampleTag"
+./unclick import datadog --resources=monitor --filter="Name=tags;Value=anExampleTag"
 ```
 
 Filtering based on resource ID:
 
 ```bash
 # Import dashboard based on the dashboard ID
-./terraformer import datadog --resources=dashboard --filter=dashboard=some-id
+./unclick import datadog --resources=dashboard --filter=dashboard=some-id
 
 # Import based on multiple resource IDs
- ./terraformer import datadog --resources=monitor --filter=monitor=id1:id2:id4
+ ./unclick import datadog --resources=monitor --filter=monitor=id1:id2:id4
 ```
 
 Tag filters are order specific. For example, if your monitor has tags (in the order) `atag: atagvalue`, `foo:bar` but you filter for `--filter="Name=tags;Value='foo:bar'" --filter="Name=tags;Value='atag: atagvalue'"`, the monitor would not be imported.
@@ -147,4 +147,4 @@ Tag filters are order specific. For example, if your monitor has tags (in the or
 *   `user`
     * `datadog_user`
 
-[1]: https://github.com/GoogleCloudPlatform/terraformer/blob/master/README.md#filtering
+[1]: upstream-README.md#filtering

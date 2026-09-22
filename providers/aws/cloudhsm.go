@@ -19,7 +19,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/service/cloudhsmv2"
 
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/terraformutils"
 )
 
 var cloudHsmAllowEmptyValues = []string{"tags."}

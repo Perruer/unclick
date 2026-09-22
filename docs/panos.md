@@ -7,7 +7,7 @@ Example:
  export PANOS_USERNAME=[PANOS_USERNAME]
  export PANOS_PASSWORD=[PANOS_PASSWORD]
 
- terraformer import panos --resources=firewall_device_config,firewall_networking,firewall_objects,firewall_policy
+ unclick import panos --resources=firewall_device_config,firewall_networking,firewall_objects,firewall_policy
 ```
 The list of usable environment variables is the same as the [pango go-client](https://github.com/PaloAltoNetworks/pango):
 *  `PANOS_HOSTNAME`

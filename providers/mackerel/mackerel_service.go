@@ -14,7 +14,7 @@
 
 package mackerel
 
-import "github.com/GoogleCloudPlatform/terraformer/terraformutils"
+import "github.com/Perruer/unclick/terraformutils"
 
 type MackerelService struct { // nolint
 	terraformutils.Service

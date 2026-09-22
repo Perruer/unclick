@@ -14,9 +14,9 @@
 package cmd
 
 import (
-	azure_terraforming "github.com/GoogleCloudPlatform/terraformer/providers/azure"
+	azure_terraforming "github.com/Perruer/unclick/providers/azure"
 
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/terraformutils"
 	"github.com/spf13/cobra"
 )
 

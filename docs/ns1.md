@@ -4,7 +4,7 @@ Example:
 
 ```
 $ export NS1_APIKEY=[NS1_APIKEY]
-$ terraformer import ns1 -r zone,monitoringjob,team
+$ unclick import ns1 -r zone,monitoringjob,team
 ```
 
 List of supported NS1 resources:

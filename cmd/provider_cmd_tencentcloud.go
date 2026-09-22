@@ -17,8 +17,8 @@ package cmd
 import (
 	"log"
 
-	tencentcloud_terraforming "github.com/GoogleCloudPlatform/terraformer/providers/tencentcloud"
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	tencentcloud_terraforming "github.com/Perruer/unclick/providers/tencentcloud"
+	"github.com/Perruer/unclick/terraformutils"
 	"github.com/spf13/cobra"
 )
 

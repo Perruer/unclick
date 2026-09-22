@@ -3,9 +3,9 @@
 Example:
 
 ```bash
- ./terraformer import mackerel --resources=service --api-key=YOUR_MACKEREL_API_KEY // or MACKEREL_API_KEY in env --app-key=YOUR_MACKEREL_API_KEY
- ./terraformer import mackerel --resources=service --filter=service=name1:name2:name4 --api-key=YOUR_MACKEREL_API_KEY // or MACKEREL_API_KEY in env --app-key=YOUR_MACKEREL_API_KEY
- ./terraformer import mackerel --resources=aws_integration --filter=aws_integration=id1:id2:id4 --api-key=YOUR_MACKEREL_API_KEY // or MACKEREL_API_KEY in env --app-key=YOUR_MACKEREL_API_KEY
+ ./unclick import mackerel --resources=service --api-key=YOUR_MACKEREL_API_KEY // or MACKEREL_API_KEY in env --app-key=YOUR_MACKEREL_API_KEY
+ ./unclick import mackerel --resources=service --filter=service=name1:name2:name4 --api-key=YOUR_MACKEREL_API_KEY // or MACKEREL_API_KEY in env --app-key=YOUR_MACKEREL_API_KEY
+ ./unclick import mackerel --resources=aws_integration --filter=aws_integration=id1:id2:id4 --api-key=YOUR_MACKEREL_API_KEY // or MACKEREL_API_KEY in env --app-key=YOUR_MACKEREL_API_KEY
 ```
 
 List of supported Mackerel services:

@@ -18,7 +18,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils/providerwrapper"
+	"github.com/Perruer/unclick/terraformutils/providerwrapper"
 )
 
 type ServiceGenerator interface {

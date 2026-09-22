@@ -21,7 +21,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/terraformutils"
 	"github.com/mrparkers/terraform-provider-keycloak/keycloak"
 )
 
@@ -35,7 +35,7 @@ func (g *RealmGenerator) InitResources() error {
 	ctx := context.TODO()
 
 	// Connect to keycloak instance
-	userAgent := "GoogleCloudPlatform Terraformer/0.8.22 (+https://github.com/GoogleCloudPlatform/terraformer) Terraform Plugin SDK/2.10.1"
+	userAgent := "Unclick/1.0.0-dev (+https://github.com/Perruer/unclick) Terraform Plugin SDK/2.10.1"
 	kck, err := keycloak.NewKeycloakClient(ctx, g.GetArgs()["url"].(string), g.GetArgs()["base_path"].(string), g.GetArgs()["client_id"].(string), g.GetArgs()["client_secret"].(string), g.GetArgs()["realm"].(string), "", "", true, g.GetArgs()["client_timeout"].(int), g.GetArgs()["root_ca_certificate"].(string), g.GetArgs()["tls_insecure_skip_verify"].(bool), userAgent, g.GetArgs()["red_hat_sso"].(bool), make(map[string]string))
 	if err != nil {
 		return errors.New("keycloak: could not connect to Keycloak")

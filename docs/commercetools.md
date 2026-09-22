@@ -1,6 +1,6 @@
 ### Use with [Commercetools](https://commercetools.com/de/)
 
-This provider use the [terraform-provider-commercetools](https://github.com/labd/terraform-provider-commercetools). The terraformer provider was build by [Dustin Deus](https://github.com/StarpTech).
+This provider use the [terraform-provider-commercetools](https://github.com/labd/terraform-provider-commercetools). The unclick provider was build by [Dustin Deus](https://github.com/StarpTech).
 
 Example:
 
@@ -20,11 +20,11 @@ export CTP_BASE_URL=base_url # default: https://api.sphere.io
 export CTP_TOKEN_URL=token_url # default: https://auth.sphere.io
 ```
 
-Run terraformer
+Run unclick
 
 ```bash
-./terraformer plan commercetools -r=types # Only planning
-./terraformer import commercetools -r=types # Import commercetools types
+./unclick plan commercetools -r=types # Only planning
+./unclick import commercetools -r=types # Import commercetools types
 ```
 
 List of supported [commercetools](https://commercetools.com/de/) resources:

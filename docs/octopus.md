@@ -6,7 +6,7 @@ Example:
 export OCTOPUS_CLI_SERVER=http://localhost:8081/
 export OCTOPUS_CLI_API_KEY=API-CK7DQ8BMJCUUBSHAJCDIATXUO
 
-terraformer import octopusdeploy --resources=tagsets
+unclick import octopusdeploy --resources=tagsets
 ```
 
 * `accounts`

@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/terraformutils"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/hashicorp/terraform/helper/hashcode"
 

@@ -17,7 +17,7 @@ package mackerel
 import (
 	"fmt"
 
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/terraformutils"
 	"github.com/mackerelio/mackerel-client-go"
 )
 

@@ -14,9 +14,9 @@
 package cmd
 
 import (
-	azuread "github.com/GoogleCloudPlatform/terraformer/providers/azuread"
+	azuread "github.com/Perruer/unclick/providers/azuread"
 
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/terraformutils"
 	"github.com/spf13/cobra"
 )
 

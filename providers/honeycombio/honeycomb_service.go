@@ -20,7 +20,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/terraformutils"
 	hnyclient "github.com/honeycombio/terraform-provider-honeycombio/client"
 )
 
@@ -35,7 +35,7 @@ func (s *HoneycombService) newClient() (*hnyclient.Client, error) {
 	client, err := hnyclient.NewClient(&hnyclient.Config{
 		APIKey:    s.GetArgs()["api_key"].(string),
 		APIUrl:    s.GetArgs()["api_url"].(string),
-		UserAgent: fmt.Sprintf("terraformer-honeycombio/%s", honeycombTerraformerProviderVersion),
+		UserAgent: fmt.Sprintf("unclick-honeycombio/%s", honeycombTerraformerProviderVersion),
 		Debug:     enableDebug,
 	})
 	if err != nil {

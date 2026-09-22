@@ -18,7 +18,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/terraformutils"
 )
 
 var (

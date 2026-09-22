@@ -23,8 +23,8 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/GoogleCloudPlatform/terraformer/providers/ionoscloud/helpers"
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/providers/ionoscloud/helpers"
+	"github.com/Perruer/unclick/terraformutils"
 	certificateManager "github.com/ionos-cloud/sdk-go-cert-manager"
 	containerRegistry "github.com/ionos-cloud/sdk-go-container-registry"
 	dataPlatform "github.com/ionos-cloud/sdk-go-dataplatform"
@@ -116,7 +116,7 @@ func NewClientByType(username, password, token, url string, clientType clientTyp
 			newConfig.WaitTime = helpers.MaxWaitTime
 			newConfig.HTTPClient = &http.Client{Transport: CreateTransport()}
 			newConfig.UserAgent = fmt.Sprintf(
-				"terraformer_ionos-cloud-sdk-go/%s_os/%s_arch/%s", ionoscloud.Version, runtime.GOOS, runtime.GOARCH)
+				"unclick_ionos-cloud-sdk-go/%s_os/%s_arch/%s", ionoscloud.Version, runtime.GOOS, runtime.GOARCH)
 			return ionoscloud.NewAPIClient(newConfig)
 		}
 	case dbaasPgSQLClient:
@@ -130,7 +130,7 @@ func NewClientByType(username, password, token, url string, clientType clientTyp
 			newConfig.WaitTime = helpers.MaxWaitTime
 			newConfig.HTTPClient = &http.Client{Transport: CreateTransport()}
 			newConfig.UserAgent = fmt.Sprintf(
-				"terraformer_ionos-cloud-sdk-go-dbaas-postgres/%s_os/%s_arch/%s", dbaasPgSQL.Version, runtime.GOOS, runtime.GOARCH)
+				"unclick_ionos-cloud-sdk-go-dbaas-postgres/%s_os/%s_arch/%s", dbaasPgSQL.Version, runtime.GOOS, runtime.GOARCH)
 			return dbaasPgSQL.NewAPIClient(newConfig)
 		}
 	case dbaasMongoClient:
@@ -144,7 +144,7 @@ func NewClientByType(username, password, token, url string, clientType clientTyp
 			newConfig.WaitTime = helpers.MaxWaitTime
 			newConfig.HTTPClient = &http.Client{Transport: CreateTransport()}
 			newConfig.UserAgent = fmt.Sprintf(
-				"terraformer_ionos-cloud-sdk-go-dbaas-mongo/%s_os/%s_arch/%s", dbaasMongo.Version, runtime.GOOS, runtime.GOARCH)
+				"unclick_ionos-cloud-sdk-go-dbaas-mongo/%s_os/%s_arch/%s", dbaasMongo.Version, runtime.GOOS, runtime.GOARCH)
 			return dbaasMongo.NewAPIClient(newConfig)
 		}
 	case certificateManagerClient:
@@ -158,7 +158,7 @@ func NewClientByType(username, password, token, url string, clientType clientTyp
 			newConfig.WaitTime = helpers.MaxWaitTime
 			newConfig.HTTPClient = &http.Client{Transport: CreateTransport()}
 			newConfig.UserAgent = fmt.Sprintf(
-				"terraformer_ionos-cloud-sdk-go-cert-manager/%s_os/%s_arch/%s", certificateManager.Version, runtime.GOOS, runtime.GOARCH)
+				"unclick_ionos-cloud-sdk-go-cert-manager/%s_os/%s_arch/%s", certificateManager.Version, runtime.GOOS, runtime.GOARCH)
 			return certificateManager.NewAPIClient(newConfig)
 		}
 	case containerRegistryClient:
@@ -172,7 +172,7 @@ func NewClientByType(username, password, token, url string, clientType clientTyp
 			newConfig.WaitTime = helpers.MaxWaitTime
 			newConfig.HTTPClient = &http.Client{Transport: CreateTransport()}
 			newConfig.UserAgent = fmt.Sprintf(
-				"terraformer_ionos-cloud-sdk-go-container-registry/%s_os/%s_arch/%s", containerRegistry.Version, runtime.GOOS, runtime.GOARCH)
+				"unclick_ionos-cloud-sdk-go-container-registry/%s_os/%s_arch/%s", containerRegistry.Version, runtime.GOOS, runtime.GOARCH)
 			return containerRegistry.NewAPIClient(newConfig)
 		}
 	case dataPlatformClient:
@@ -186,7 +186,7 @@ func NewClientByType(username, password, token, url string, clientType clientTyp
 			newConfig.WaitTime = helpers.MaxWaitTime
 			newConfig.HTTPClient = &http.Client{Transport: CreateTransport()}
 			newConfig.UserAgent = fmt.Sprintf(
-				"terraformer_ionos-cloud-sdk-go-dataplatform/%s_os/%s_arch/%s", dataPlatform.Version, runtime.GOOS, runtime.GOARCH)
+				"unclick_ionos-cloud-sdk-go-dataplatform/%s_os/%s_arch/%s", dataPlatform.Version, runtime.GOOS, runtime.GOARCH)
 			return dataPlatform.NewAPIClient(newConfig)
 		}
 	case dnsClient:
@@ -200,7 +200,7 @@ func NewClientByType(username, password, token, url string, clientType clientTyp
 			newConfig.WaitTime = helpers.MaxWaitTime
 			newConfig.HTTPClient = &http.Client{Transport: CreateTransport()}
 			newConfig.UserAgent = fmt.Sprintf(
-				"terraformer_ionos-cloud-sdk-go-dns/%s_os/%s_arch/%s", dns.Version, runtime.GOOS, runtime.GOARCH)
+				"unclick_ionos-cloud-sdk-go-dns/%s_os/%s_arch/%s", dns.Version, runtime.GOOS, runtime.GOARCH)
 			return dns.NewAPIClient(newConfig)
 		}
 	case loggingClient:
@@ -214,7 +214,7 @@ func NewClientByType(username, password, token, url string, clientType clientTyp
 			newConfig.WaitTime = helpers.MaxWaitTime
 			newConfig.HTTPClient = &http.Client{Transport: CreateTransport()}
 			newConfig.UserAgent = fmt.Sprintf(
-				"terraformer_ionos-cloud-sdk-go-logging/%s_os/%s_arch/%s", logging.Version, runtime.GOOS, runtime.GOARCH)
+				"unclick_ionos-cloud-sdk-go-logging/%s_os/%s_arch/%s", logging.Version, runtime.GOOS, runtime.GOARCH)
 			return logging.NewAPIClient(newConfig)
 		}
 	default:

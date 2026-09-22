@@ -35,15 +35,15 @@ func main() {
 				switch OS {
 				case "linux":
 					GOOS = "linux"
-					binaryName = "terraformer-" + provider + "-linux-" + arch
+					binaryName = "unclick-" + provider + "-linux-" + arch
 				case "windows":
 					GOOS = "windows"
-					binaryName = "terraformer-" + provider + "-windows-" + arch + ".exe"
+					binaryName = "unclick-" + provider + "-windows-" + arch + ".exe"
 				case "mac":
 					GOOS = "darwin"
-					binaryName = "terraformer-" + provider + "-darwin-" + arch
+					binaryName = "unclick-" + provider + "-darwin-" + arch
 				}
-				log.Println("Build terraformer with "+provider+" provider...", "GOOS=", GOOS, " for GOARCH=", arch)
+				log.Println("Build unclick with "+provider+" provider...", "GOOS=", GOOS, " for GOARCH=", arch)
 				deletedProvider := []string{}
 				for _, f := range files {
 					if strings.HasPrefix(f.Name(), filePrefix) {

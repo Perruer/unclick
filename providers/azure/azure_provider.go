@@ -26,8 +26,8 @@ import (
 	"github.com/hashicorp/go-azure-helpers/sender"
 	"github.com/manicminer/hamilton/environments"
 
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils/providerwrapper"
+	"github.com/Perruer/unclick/terraformutils"
+	"github.com/Perruer/unclick/terraformutils/providerwrapper"
 )
 
 type AzureProvider struct { //nolint
@@ -97,7 +97,7 @@ func (p *AzureProvider) getAuthorizer() (autorest.Authorizer, error) {
 	if oauthConfig == nil {
 		return nil, fmt.Errorf("unable to configure OAuthConfig for tenant %s", p.config.TenantID)
 	}
-	sender := sender.BuildSender("terraformer")
+	sender := sender.BuildSender("unclick")
 	ctx := context.Background()
 	var auth autorest.Authorizer
 

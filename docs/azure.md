@@ -45,9 +45,9 @@ export ARM_USE_OIDC=true
 # Using deprecated ADAL authentication for throubleshooting
 export ARM_USE_ADAL=true
 
-./terraformer import azure -r resource_group
-./terraformer import azure -R my_resource_group -r virtual_network,resource_group
-./terraformer import azure -r resource_group --filter=resource_group=/subscriptions/<Subscription id>/resourceGroups/<RGNAME>
+./unclick import azure -r resource_group
+./unclick import azure -R my_resource_group -r virtual_network,resource_group
+./unclick import azure -r resource_group --filter=resource_group=/subscriptions/<Subscription id>/resourceGroups/<RGNAME>
 ```
 
 ## List of supported Azure resources
@@ -226,4 +226,4 @@ export ARM_USE_ADAL=true
 
 ### Virtual networks and subnets
 
-Terraformer will import `azurerm_virtual_network` config with inlined subnet information swipped, in order to avoid any potential circular dependencies. To import the subnet information, please also import `azurerm_subnet`.
+Unclick will import `azurerm_virtual_network` config with inlined subnet information swipped, in order to avoid any potential circular dependencies. To import the subnet information, please also import `azurerm_subnet`.

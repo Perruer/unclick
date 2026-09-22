@@ -4,8 +4,8 @@
 Example:
 
 ```
- terraformer import aws --resources=vpc,subnet --connect=true --regions=eu-west-1 --profile=prod
- terraformer import aws --resources=vpc,subnet --filter=vpc=vpc_id1:vpc_id2:vpc_id3 --regions=eu-west-1
+ unclick import aws --resources=vpc,subnet --connect=true --regions=eu-west-1 --profile=prod
+ unclick import aws --resources=vpc,subnet --filter=vpc=vpc_id1:vpc_id2:vpc_id3 --regions=eu-west-1
 ```
 
 #### Profiles support
@@ -13,20 +13,20 @@ Example:
 AWS configuration including environmental variables, shared credentials file (\~/.aws/credentials), and shared config file (\~/.aws/config) will be loaded by the tool by default. To use a specific profile, you can use the following command:
 
 ```
-terraformer import aws --resources=vpc,subnet --regions=eu-west-1 --profile=prod
+unclick import aws --resources=vpc,subnet --regions=eu-west-1 --profile=prod
 ```
 
 You can also provide no regions when importing resources:
 ```
-terraformer import aws --resources=cloudfront --profile=prod
+unclick import aws --resources=cloudfront --profile=prod
 ```
-In that case terraformer will not know with which region resources are associated with and will not assume any region. That scenario is useful in case of global resources (e.g. CloudFront distributions or Route 53 records) and when region is passed implicitly through environmental variables or metadata service.
+In that case unclick will not know with which region resources are associated with and will not assume any region. That scenario is useful in case of global resources (e.g. CloudFront distributions or Route 53 records) and when region is passed implicitly through environmental variables or metadata service.
 
 Examples to import other resources-
 
  * Security Group-
 ```
-terraformer import aws --resources=sg --regions=us-east-1
+unclick import aws --resources=sg --regions=us-east-1
 ```
 
 
@@ -377,21 +377,21 @@ List of global AWS services:
 Attribute filters allow filtering across different resource types by its attributes.
 
 ```
-terraformer import aws --resources=ec2_instance,ebs --filter="Name=tags.costCenter;Value=20000:'20001:1'" --regions=eu-west-1
+unclick import aws --resources=ec2_instance,ebs --filter="Name=tags.costCenter;Value=20000:'20001:1'" --regions=eu-west-1
 ```
 Will only import AWS EC2 instances along with EBS volumes annotated with tag `costCenter` with values `20000` or `20001:1`. Attribute filters are by default applicable to all resource types although it's possible to specify to what resource type a given filter should be applicable to by providing `Type=<type>` parameter. For example:
 ```
-terraformer import aws --resources=ec2_instance,ebs --filter=Type=ec2_instance;Name=tags.costCenter;Value=20000:'20001:1' --regions=eu-west-1
+unclick import aws --resources=ec2_instance,ebs --filter=Type=ec2_instance;Name=tags.costCenter;Value=20000:'20001:1' --regions=eu-west-1
 ```
 Will work as same as example above with a change the filter will be applicable only to `ec2_instance` resources.
 
 Few more examples - How to import ec2 instance based on instance name and id
 ```
-terraformer import aws --resources=ec2_instance --filter="Name=tags.Name;Value=Terraformer" --regions=us-east-1
+unclick import aws --resources=ec2_instance --filter="Name=tags.Name;Value=Unclick" --regions=us-east-1
 ```
-This command imports ec2 instance having name as Terraformer.
+This command imports ec2 instance having name as Unclick.
 ```
-terraformer import aws --resources=ec2_instance --filter="Name=id;Value=i-0xxxxxxxxx" --regions=us-east-1
+unclick import aws --resources=ec2_instance --filter="Name=id;Value=i-0xxxxxxxxx" --regions=us-east-1
 ```
 This command imports ec2 instance having instance-id as i-0xxxxxxxxx.
 
@@ -399,8 +399,8 @@ Due to fact API Gateway generates a lot of resources, it's possible to issue a f
 
 #### SQS queues retrieval
 
-Terraformer uses AWS [ListQueues](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_ListQueues.html) API call to fetch available queues. The API is able to return only up to 1000 queues and an additional name prefix should be passed to filter the list results. It's possible to pass `QueueNamePrefix` parameter by environmental variable `SQS_PREFIX`.
+Unclick uses AWS [ListQueues](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_ListQueues.html) API call to fetch available queues. The API is able to return only up to 1000 queues and an additional name prefix should be passed to filter the list results. It's possible to pass `QueueNamePrefix` parameter by environmental variable `SQS_PREFIX`.
 
 #### Security groups and rules
 
-Terraformer by default will try to keep rules in security groups as long as no circular dependencies are detected. This approach is implemented to keep the rules as tidy as possible but there can be cases when this behaviour is not desirable (see [GoogleCloudPlatform/terraformer#493](https://github.com/GoogleCloudPlatform/terraformer/issues/493)). To make Terraformer split rules from security groups, add `SPLIT_SG_RULES` environmental variable with any value.
+Unclick by default will try to keep rules in security groups as long as no circular dependencies are detected. This approach is implemented to keep the rules as tidy as possible but there can be cases when this behaviour is not desirable (see [GoogleCloudPlatform/terraformer#493](https://github.com/GoogleCloudPlatform/terraformer/issues/493)). To make Unclick split rules from security groups, add `SPLIT_SG_RULES` environmental variable with any value.

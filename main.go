@@ -20,7 +20,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/GoogleCloudPlatform/terraformer/cmd"
+	"github.com/Perruer/unclick/cmd"
 )
 
 type TerraformerWriter struct {

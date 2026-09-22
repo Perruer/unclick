@@ -6,7 +6,7 @@ import (
 	cloudbuild "cloud.google.com/go/cloudbuild/apiv1"
 	pb "google.golang.org/genproto/googleapis/devtools/cloudbuild/v1"
 
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/terraformutils"
 )
 
 const cbMaxPageSize = 50

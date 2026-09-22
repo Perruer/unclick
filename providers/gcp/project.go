@@ -15,7 +15,7 @@
 package gcp
 
 import (
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/terraformutils"
 )
 
 var projectAllowEmptyValues = []string{""}

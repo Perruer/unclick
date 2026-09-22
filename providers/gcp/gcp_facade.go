@@ -1,8 +1,8 @@
 package gcp
 
 import (
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils/providerwrapper"
+	"github.com/Perruer/unclick/terraformutils"
+	"github.com/Perruer/unclick/terraformutils/providerwrapper"
 )
 
 type GCPFacade struct { //nolint

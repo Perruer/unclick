@@ -19,8 +19,8 @@ import (
 	"reflect"
 	"strings"
 
-	panos_terraforming "github.com/GoogleCloudPlatform/terraformer/providers/panos"
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	panos_terraforming "github.com/Perruer/unclick/providers/panos"
+	"github.com/Perruer/unclick/terraformutils"
 	"github.com/spf13/cobra"
 )
 

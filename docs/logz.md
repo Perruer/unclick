@@ -3,7 +3,7 @@
 Example:
 
 ```
- LOGZIO_API_TOKEN=foobar LOGZIO_BASE_URL=https://api-eu.logz.io ./terraformer import logzio -r=alerts,alert_notification_endpoints // Import Logz.io alerts and alert notification endpoints
+ LOGZIO_API_TOKEN=foobar LOGZIO_BASE_URL=https://api-eu.logz.io ./unclick import logzio -r=alerts,alert_notification_endpoints // Import Logz.io alerts and alert notification endpoints
 ```
 
 List of supported Logz.io resources:

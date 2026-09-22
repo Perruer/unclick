@@ -24,11 +24,11 @@ Example:
 }
 ```
 
-Terraformer will pick up the profile name specified in the `--profile` parameter.
+Unclick will pick up the profile name specified in the `--profile` parameter.
 It defaults to the first config in the config array.
 
 ```sh
-terraformer import alicloud --resources=ecs --regions=ap-southeast-3 --profile=default
+unclick import alicloud --resources=ecs --regions=ap-southeast-3 --profile=default
 ```
 
 List of supported AliCloud resources:

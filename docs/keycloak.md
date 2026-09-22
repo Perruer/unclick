@@ -9,9 +9,9 @@ Example:
  export KEYCLOAK_CLIENT_SECRET=[KEYCLOAK_CLIENT_SECRET]
  export RED_HAT_SSO=1 # Only users of the RH-SSO distribution will need to set this.
 
- terraformer import keycloak --resources=realms
- terraformer import keycloak --resources=realms --filter=realm=name1:name2:name3
- terraformer import keycloak --resources=realms --targets realmA,realmB
+ unclick import keycloak --resources=realms
+ unclick import keycloak --resources=realms --filter=realm=name1:name2:name3
+ unclick import keycloak --resources=realms --targets realmA,realmB
 ```
 
 Here is the list of resources which are currently supported by Keycloak provider v.4.0.1:

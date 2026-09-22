@@ -15,7 +15,7 @@ const packageCmdPath = "cmd"
 
 func main() {
 	provider := os.Args[1]
-	log.Println("Build terraformer with " + provider + " provider...")
+	log.Println("Build unclick with " + provider + " provider...")
 	files, err := os.ReadDir(packageCmdPath)
 	if err != nil {
 		log.Println(err)
@@ -66,7 +66,7 @@ func main() {
 		log.Println(err)
 	}
 	// build....
-	cmd := exec.Command("go", "build", "-o", "terraformer-"+provider)
+	cmd := exec.Command("go", "build", "-o", "unclick-"+provider)
 	var outb, errb bytes.Buffer
 	cmd.Stdout = &outb
 	cmd.Stderr = &errb

@@ -14,8 +14,8 @@
 package cmd
 
 import (
-	datadog_terraforming "github.com/GoogleCloudPlatform/terraformer/providers/datadog"
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	datadog_terraforming "github.com/Perruer/unclick/providers/datadog"
+	"github.com/Perruer/unclick/terraformutils"
 	"github.com/spf13/cobra"
 )
 

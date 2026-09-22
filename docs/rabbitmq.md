@@ -7,8 +7,8 @@ Example:
  export RABBITMQ_USERNAME=[RABBITMQ_USERNAME]
  export RABBITMQ_PASSWORD=[RABBITMQ_PASSWORD]
 
- terraformer import rabbitmq --resources=vhosts,queues,exchanges
- terraformer import rabbitmq --resources=vhosts,queues,exchanges --filter=vhost=name1:name2:name3
+ unclick import rabbitmq --resources=vhosts,queues,exchanges
+ unclick import rabbitmq --resources=vhosts,queues,exchanges --filter=vhost=name1:name2:name3
 ```
 
 All RabbitMQ resources that are currently supported by the RabbitMQ provider, are also supported by this module. Here is the list of resources which are currently supported by RabbitMQ provider v.1.1.0:

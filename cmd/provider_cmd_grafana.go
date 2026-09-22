@@ -14,9 +14,9 @@
 package cmd
 
 import (
-	"github.com/GoogleCloudPlatform/terraformer/providers/grafana"
+	"github.com/Perruer/unclick/providers/grafana"
 
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/terraformutils"
 	"github.com/spf13/cobra"
 )
 

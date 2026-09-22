@@ -20,9 +20,9 @@ import (
 	"os/exec"
 	"sort"
 
-	"github.com/GoogleCloudPlatform/terraformer/cmd"
-	openstack_terraforming "github.com/GoogleCloudPlatform/terraformer/providers/openstack"
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/cmd"
+	openstack_terraforming "github.com/Perruer/unclick/providers/openstack"
+	"github.com/Perruer/unclick/terraformutils"
 )
 
 const command = "terraform init && terraform plan"

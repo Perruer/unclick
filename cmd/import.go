@@ -21,14 +21,14 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils/terraformerstring"
+	"github.com/Perruer/unclick/terraformutils/terraformerstring"
 
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils/providerwrapper"
+	"github.com/Perruer/unclick/terraformutils/providerwrapper"
 
 	"github.com/spf13/pflag"
 
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils/terraformoutput"
+	"github.com/Perruer/unclick/terraformutils"
+	"github.com/Perruer/unclick/terraformutils/terraformoutput"
 
 	"github.com/spf13/cobra"
 )
@@ -189,7 +189,7 @@ func importFromPlan(providerMapping *terraformutils.ProvidersMapping, options Im
 	}
 
 	if options.Plan {
-		path := Path(options.PathPattern, providerMapping.GetBaseProvider().GetName(), "terraformer", options.PathOutput)
+		path := Path(options.PathPattern, providerMapping.GetBaseProvider().GetName(), "unclick", options.PathOutput)
 		return ExportPlanFile(plan, path, "plan.json")
 	}
 

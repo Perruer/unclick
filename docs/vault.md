@@ -3,8 +3,8 @@
 Example:
 
 ```
- ./terraformer import vault --resources=aws_secret_backend_role --token=YOUR_VAULT_TOKEN // or VAULT_TOKEN in env --address=YOUR_VAULT_ADDRESS // or VAULT_ADDR in env
- ./terraformer import vault --resources=policy --filter=policy=id1:id2:id4 --token=YOUR_VAULT_TOKEN // or VAULT_TOKEN in env --address=YOUR_VAULT_ADDRESS // or VAULT_ADDR in env
+ ./unclick import vault --resources=aws_secret_backend_role --token=YOUR_VAULT_TOKEN // or VAULT_TOKEN in env --address=YOUR_VAULT_ADDRESS // or VAULT_ADDR in env
+ ./unclick import vault --resources=policy --filter=policy=id1:id2:id4 --token=YOUR_VAULT_TOKEN // or VAULT_TOKEN in env --address=YOUR_VAULT_ADDRESS // or VAULT_ADDR in env
 ```
 
 List of supported Vault resources:
@@ -84,4 +84,4 @@ List of supported Vault resources:
 * `token_auth_backend_role`
     * `token_auth_backend_role`
 
-[1]: https://github.com/GoogleCloudPlatform/terraformer/blob/master/README.md#filtering
+[1]: upstream-README.md#filtering

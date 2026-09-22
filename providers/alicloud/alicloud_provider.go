@@ -18,7 +18,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/terraformutils"
 	"github.com/zclconf/go-cty/cty"
 )
 

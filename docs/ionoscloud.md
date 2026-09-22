@@ -59,7 +59,7 @@ If you do not see your resource in the tf plan, please enable TF_LOG=debug and c
 for a message that will let you know why the resource was not imported.
 
 #### Notes:
- - A server must have a `NIC` and a `volume` attached to be allowed to be imported by terraformer.
+ - A server must have a `NIC` and a `volume` attached to be allowed to be imported by unclick.
  - A server must also have a `BootVolume` set.
 
 

@@ -15,7 +15,7 @@
 package ns1
 
 import (
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/terraformutils"
 )
 
 type Ns1Service struct { //nolint

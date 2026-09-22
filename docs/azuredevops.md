@@ -8,8 +8,8 @@ Supports access via [Personal Access Token](https://registry.terraform.io/provid
 export AZDO_ORG_SERVICE_URL="https://dev.azure.com/<Your Org Name>"
 export AZDO_PERSONAL_ACCESS_TOKEN="<Personal Access Token>"
 
-./terraformer import azuredevops -r *
-./terraformer import azuredevops -r project,git_repository
+./unclick import azuredevops -r *
+./unclick import azuredevops -r project,git_repository
 ```
 
 ## List of supported Azure DevOps resources

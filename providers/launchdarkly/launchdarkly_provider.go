@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/terraformutils"
 	launchdarkly "github.com/launchdarkly/api-client-go"
 )
 
@@ -46,7 +46,7 @@ func (p *LaunchDarklyProvider) Init(args []string) error {
 	cfg := &launchdarkly.Configuration{
 		BasePath:      basePath,
 		DefaultHeader: make(map[string]string),
-		UserAgent:     fmt.Sprintf("launchdarkly-terraformer/%s", version),
+		UserAgent:     fmt.Sprintf("launchdarkly-unclick/%s", version),
 	}
 	cfg.AddDefaultHeader("LD-API-Version", APIVersion)
 

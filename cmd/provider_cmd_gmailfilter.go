@@ -15,8 +15,8 @@
 package cmd
 
 import (
-	gmailfilter_terraforming "github.com/GoogleCloudPlatform/terraformer/providers/gmailfilter"
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	gmailfilter_terraforming "github.com/Perruer/unclick/providers/gmailfilter"
+	"github.com/Perruer/unclick/terraformutils"
 	"github.com/spf13/cobra"
 )
 

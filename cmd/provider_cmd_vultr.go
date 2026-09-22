@@ -14,9 +14,9 @@
 package cmd
 
 import (
-	vultr_terraforming "github.com/GoogleCloudPlatform/terraformer/providers/vultr"
+	vultr_terraforming "github.com/Perruer/unclick/providers/vultr"
 
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/terraformutils"
 	"github.com/spf13/cobra"
 )
 

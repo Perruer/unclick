@@ -6,7 +6,7 @@ Example:
 $ export ARM_TENANT_ID=<TENANT_ID>
 $ export ARM_CLIENT_ID=<CLIENT_ID>
 $ export ARM_CLIENT_SECRET=<CLIENT_SECRET>
-$ terraformer import azuread --resources=user,application
+$ unclick import azuread --resources=user,application
 ```
 
 List of supported AzureAD services:

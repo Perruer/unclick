@@ -14,9 +14,9 @@
 package cmd
 
 import (
-	vault_terraforming "github.com/GoogleCloudPlatform/terraformer/providers/vault"
+	vault_terraforming "github.com/Perruer/unclick/providers/vault"
 
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/terraformutils"
 	"github.com/spf13/cobra"
 )
 

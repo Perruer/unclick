@@ -3,7 +3,7 @@
 Example:
 
 ```
- terraformer import openstack --resources=compute,networking --regions=RegionOne
+ unclick import openstack --resources=compute,networking --regions=RegionOne
 ```
 
 List of supported OpenStack services:

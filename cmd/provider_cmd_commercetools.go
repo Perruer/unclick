@@ -17,8 +17,8 @@ import (
 	"errors"
 	"os"
 
-	commercetools_terraforming "github.com/GoogleCloudPlatform/terraformer/providers/commercetools"
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	commercetools_terraforming "github.com/Perruer/unclick/providers/commercetools"
+	"github.com/Perruer/unclick/terraformutils"
 	"github.com/spf13/cobra"
 )
 

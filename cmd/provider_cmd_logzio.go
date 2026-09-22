@@ -17,8 +17,8 @@ import (
 	"errors"
 	"os"
 
-	logzio_terraforming "github.com/GoogleCloudPlatform/terraformer/providers/logzio"
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	logzio_terraforming "github.com/Perruer/unclick/providers/logzio"
+	"github.com/Perruer/unclick/terraformutils"
 	"github.com/spf13/cobra"
 )
 

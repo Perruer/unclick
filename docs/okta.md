@@ -6,7 +6,7 @@ Example:
 $ export OKTA_ORG_NAME=<ORG_NAME>
 $ export OKTA_BASE_URL=<BASE_URL>
 $ export OKTA_API_TOKEN=<API_TOKEN>
-$ terraformer import okta --resources=okta_user,okta_group
+$ unclick import okta --resources=okta_user,okta_group
 ```
 
 If you login to your Okta instance at: https://dev-12345678.okta.com/ you would configure:

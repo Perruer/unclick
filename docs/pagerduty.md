@@ -3,7 +3,7 @@
 Example:
 
 ```
-./terraformer import pagerduty -r team,schedule,user  -t YOUR_PAGERDUTY_TOKEN // or PAGERDUTY_TOKEN in env
+./unclick import pagerduty -r team,schedule,user  -t YOUR_PAGERDUTY_TOKEN // or PAGERDUTY_TOKEN in env
 ```
 Instructions to obtain a Auth Token: https://developer.pagerduty.com/docs/rest-api-v2/authentication/
 

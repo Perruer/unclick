@@ -22,6 +22,6 @@ func (c *Config) NewClient() *commercetools.Client {
 		ProjectKey:  c.ProjectKey,
 		URL:         c.BaseURL,
 		HTTPClient:  httpClient,
-		LibraryName: "terraformer",
+		LibraryName: "unclick",
 	})
 }

@@ -14,7 +14,7 @@
 
 package kubernetes
 
-import "github.com/GoogleCloudPlatform/terraformer/terraformutils"
+import "github.com/Perruer/unclick/terraformutils"
 
 type KubernetesService struct { //nolint
 	terraformutils.Service

@@ -15,7 +15,7 @@
 package keycloak
 
 import (
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/terraformutils"
 )
 
 type KeycloakService struct { //nolint

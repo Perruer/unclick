@@ -1,5 +1,6 @@
 .idea
 generated
+unclick*
 terraformer*
 cmd/tmp
 .DS_Store

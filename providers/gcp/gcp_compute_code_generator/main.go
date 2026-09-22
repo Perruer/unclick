@@ -48,7 +48,7 @@ import (
 	"log"
 	{{ if .byZone  }}"strings"{{end}}
 
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/terraformutils"
 
 	"google.golang.org/api/compute/v1"
 )
@@ -138,7 +138,7 @@ const computeTemplate = `
 package gcp
 
 import (
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/terraformutils"
 )
 
 // Map of supported GCP compute service with code generate

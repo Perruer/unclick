@@ -18,9 +18,9 @@ import (
 	"log"
 	"strings"
 
-	yandex_terraforming "github.com/GoogleCloudPlatform/terraformer/providers/yandex"
+	yandex_terraforming "github.com/Perruer/unclick/providers/yandex"
 
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/terraformutils"
 	"github.com/spf13/cobra"
 )
 

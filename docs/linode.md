@@ -4,7 +4,7 @@ Example:
 
 ```
 export LINODE_TOKEN=[LINODE_TOKEN]
-./terraformer import linode -r instance
+./unclick import linode -r instance
 ```
 
 List of supported Linode resources:

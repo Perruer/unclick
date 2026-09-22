@@ -3,8 +3,8 @@
 Example:
 
 ```shell
-./terraformer import gitlab --group=GROUP_TO_IMPORT --resources=projects --token=YOUR_TOKEN # or GITLAB_TOKEN in env
-./terraformer import gitlab --group=GROUP_TO_IMPORT --resources=groups --base-url=https://your-self-hosted-gitlab-domain/api/v4
+./unclick import gitlab --group=GROUP_TO_IMPORT --resources=projects --token=YOUR_TOKEN # or GITLAB_TOKEN in env
+./unclick import gitlab --group=GROUP_TO_IMPORT --resources=groups --base-url=https://your-self-hosted-gitlab-domain/api/v4
 ```
 
 List of supported resources:

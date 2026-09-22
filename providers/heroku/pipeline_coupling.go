@@ -17,7 +17,7 @@ package heroku
 import (
 	"context"
 
-	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
+	"github.com/Perruer/unclick/terraformutils"
 	heroku "github.com/heroku/heroku-go/v5"
 )
 

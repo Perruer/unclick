@@ -6,7 +6,7 @@ Example:
 $ export AUTH0_DOMAIN=<DOMAIN>
 $ export AUTH0_CLIENT_ID=<CLIENT_ID>
 $ export AUTH0_CLIENT_SECRET=<CLIENT_SECRET>
-$ terraformer import auth0 --resources=auth0_rule,auth0_user
+$ unclick import auth0 --resources=auth0_rule,auth0_user
 ```
 
 List of supported Auth0 services:
