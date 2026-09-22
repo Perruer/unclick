@@ -13,5 +13,6 @@ var versionCmd = &cobra.Command{
 	Short: "Print the version number of Unclick",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Unclick " + version)
+		fmt.Println("https://github.com/Perruer/unclick")
 	},
 }
