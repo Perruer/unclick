@@ -136,6 +136,12 @@ func readOnlyAttributesOf(r *schema.Provider, resourceTypes []string) map[string
 	return readOnlyAttributes
 }
 
+// ListResource returns the existing objects of a resource type that has a
+// list resource, with their full state.
+func (p *ProviderWrapper) ListResource(typeName string, limit int64) ([]plugin.ListedResource, []plugin.Diagnostic, error) {
+	return p.provider.ListResource(context.Background(), typeName, cty.NilVal, true, limit)
+}
+
 // ValidateResourceConfig asks the provider to validate a resource body.
 func (p *ProviderWrapper) ValidateResourceConfig(typeName string, config cty.Value) ([]plugin.Diagnostic, error) {
 	return p.provider.ValidateResourceConfig(context.Background(), typeName, config)
@@ -276,7 +282,7 @@ func (p *ProviderWrapper) Refresh(info *legacy.InstanceInfo, state *legacy.Insta
 	if newState.IsNull() {
 		return nil, fmt.Errorf("ERROR: Read resource response is null for resource %s", info.Id)
 	}
-	return shimmedState(newState, rs.Version), nil
+	return StateFromValue(newState, rs.Version), nil
 }
 
 func (p *ProviderWrapper) initProvider(verbose bool) error {
@@ -372,7 +378,9 @@ func attrsAsObjectValue(s *legacy.InstanceState, ty cty.Type) (cty.Value, error)
 	return shim.HCL2ValueFromFlatmap(attrs, ty)
 }
 
-func shimmedState(v cty.Value, schemaVersion int64) *legacy.InstanceState {
+// StateFromValue converts a resource object into the flatmap state the
+// importers work with.
+func StateFromValue(v cty.Value, schemaVersion int64) *legacy.InstanceState {
 	attrs := shim.FlatmapValueFromHCL2(v)
 	return &legacy.InstanceState{
 		ID:         attrs["id"],

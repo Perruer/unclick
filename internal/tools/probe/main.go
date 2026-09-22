@@ -4,7 +4,8 @@
 //	go run ./internal/tools/probe hashicorp/random random_string some-id
 //
 // PROBE_CONFIG_JSON holds the provider configuration as a JSON object and
-// PROBE_SKIP_CONFIGURE=1 only fetches the schema.
+// PROBE_SKIP_CONFIGURE=1 only fetches the schema, and PROBE_LIST=<type> calls
+// ListResource for that type.
 package main
 
 import (
@@ -44,6 +45,22 @@ func main() {
 	}
 	if os.Getenv("PROBE_SKIP_CONFIGURE") == "" {
 		check(p.Configure(ctx, cfg))
+	}
+	if typ := os.Getenv("PROBE_LIST"); typ != "" {
+		found, diags, err := p.ListResource(ctx, typ, cty.NilVal, true, 1000)
+		check(err)
+		for _, d := range diags {
+			fmt.Printf("diagnostic: %s: %s\n", d.Summary, d.Detail)
+		}
+		fmt.Printf("list %s -> %d object(s)\n", typ, len(found))
+		for _, f := range found {
+			id := "?"
+			if !f.Object.IsNull() && f.Object.Type().HasAttribute("id") && !f.Object.GetAttr("id").IsNull() {
+				id = f.Object.GetAttr("id").AsString()
+			}
+			fmt.Printf("  %q id=%s attributes=%d\n", f.DisplayName, id, len(shim.FlatmapValueFromHCL2(f.Object)))
+		}
+		return
 	}
 	if len(os.Args) > 3 {
 		typ, id := os.Args[2], os.Args[3]

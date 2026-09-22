@@ -16,7 +16,9 @@ package plugin
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"io"
 
 	"github.com/zclconf/go-cty/cty"
 
@@ -146,6 +148,45 @@ func (p *v6) validateResourceConfig(ctx context.Context, typeName string, config
 		return nil, fmt.Errorf("ValidateResourceConfig %s: %w", typeName, err)
 	}
 	return diags6(resp.Diagnostics), nil
+}
+
+func (p *v6) listResource(ctx context.Context, typeName string, config cty.Value, configTy cty.Type, includeResource bool, limit int64, objectTy cty.Type) ([]ListedResource, []Diagnostic, error) {
+	raw, err := encode(config, configTy)
+	if err != nil {
+		return nil, nil, fmt.Errorf("encoding %s list configuration: %w", typeName, err)
+	}
+	stream, err := p.client.ListResource(ctx, &proto.ListResource_Request{
+		TypeName:              typeName,
+		Config:                &proto.DynamicValue{Msgpack: raw},
+		IncludeResourceObject: includeResource,
+		Limit:                 limit,
+	})
+	if err != nil {
+		return nil, nil, fmt.Errorf("ListResource %s: %w", typeName, err)
+	}
+	var out []ListedResource
+	var diags []Diagnostic
+	for {
+		ev, err := stream.Recv()
+		if errors.Is(err, io.EOF) {
+			return out, diags, nil
+		}
+		if err != nil {
+			return out, diags, fmt.Errorf("ListResource %s: %w", typeName, err)
+		}
+		evDiags := diags6(ev.Diagnostic)
+		diags = append(diags, evDiags...)
+		if diagError("", evDiags) != nil {
+			continue
+		}
+		item := ListedResource{DisplayName: ev.DisplayName, Object: cty.NullVal(objectTy)}
+		if obj := ev.GetResourceObject(); obj != nil {
+			if item.Object, err = decode(obj.GetMsgpack(), obj.GetJson(), objectTy); err != nil {
+				return out, diags, fmt.Errorf("decoding listed %s: %w", typeName, err)
+			}
+		}
+		out = append(out, item)
+	}
 }
 
 func diags6(ds []*proto.Diagnostic) []Diagnostic {

@@ -27,9 +27,9 @@ import (
 	"github.com/Perruer/unclick/internal/schema"
 )
 
-// maxFixRounds bounds how often one resource is re-validated: every round
-// removes at least one argument, and real conflicts need one or two.
-const maxFixRounds = 8
+// maxFixRounds bounds how often one resource is re-validated. Every round
+// removes one argument.
+const maxFixRounds = 16
 
 // ConfigValidator is what FixInvalidConfig needs from a running provider.
 type ConfigValidator interface {
@@ -66,19 +66,23 @@ func fixResource(r *Resource, b *schema.Block, v ConfigValidator) {
 			log.Printf("cannot validate %s: %v", r.InstanceInfo.Id, err)
 			return
 		}
-		removed := 0
+		// Remove one argument per round: two arguments that conflict are both
+		// reported, and dropping either one settles it.
+		removed := false
 		for _, d := range diags {
-			if !d.Error {
+			if !d.Error || !removeOptional(r.Item, b, d.Path) {
 				continue
 			}
-			if removeOptional(r.Item, b, d.Path) {
-				removed++
-				log.Printf("%s: left out %s (%s)", r.InstanceInfo.Id, pathString(d.Path), d.Summary)
-			} else {
-				log.Printf("WARN: %s: %s: %s", r.InstanceInfo.Id, d.Summary, d.Detail)
-			}
+			log.Printf("%s: left out %s (%s)", r.InstanceInfo.Id, pathString(d.Path), d.Summary)
+			removed = true
+			break
 		}
-		if removed == 0 {
+		if !removed {
+			for _, d := range diags {
+				if d.Error {
+					log.Printf("WARN: %s: %s: %s", r.InstanceInfo.Id, d.Summary, d.Detail)
+				}
+			}
 			return
 		}
 	}

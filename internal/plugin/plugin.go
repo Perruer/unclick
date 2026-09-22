@@ -86,6 +86,15 @@ type protocol interface {
 	readResource(ctx context.Context, typeName string, state cty.Value, ty cty.Type, private []byte) (cty.Value, []byte, error)
 	importResourceState(ctx context.Context, typeName, id string, types func(string) (cty.Type, bool)) ([]ImportedResource, error)
 	validateResourceConfig(ctx context.Context, typeName string, config cty.Value, ty cty.Type) ([]Diagnostic, error)
+	listResource(ctx context.Context, typeName string, config cty.Value, configTy cty.Type, includeResource bool, limit int64, objectTy cty.Type) ([]ListedResource, []Diagnostic, error)
+}
+
+// ListedResource is one object found by ListResource.
+type ListedResource struct {
+	DisplayName string
+	// Object is the full resource, or null when it was not requested or the
+	// provider did not send it.
+	Object cty.Value
 }
 
 // Provider is a running provider plugin.
@@ -208,6 +217,31 @@ func (p *Provider) ValidateResourceConfig(ctx context.Context, typeName string, 
 		return nil, err
 	}
 	return p.rpc.validateResourceConfig(ctx, typeName, config, ty)
+}
+
+// ListResource asks the provider for existing objects of a resource type
+// that has a list resource, the mechanism behind Terraform's `query`
+// command. config follows the list resource's own schema (filters and the
+// like); missing attributes are null. Objects whose event carried an error
+// are skipped; all diagnostics are returned.
+func (p *Provider) ListResource(ctx context.Context, typeName string, config cty.Value, includeResource bool, limit int64) ([]ListedResource, []Diagnostic, error) {
+	s, err := p.Schema(ctx)
+	if err != nil {
+		return nil, nil, err
+	}
+	lr, ok := s.ListResources[typeName]
+	if !ok {
+		return nil, nil, fmt.Errorf("provider has no list resource for %q", typeName)
+	}
+	rs, ok := s.ResourceTypes[typeName]
+	if !ok {
+		return nil, nil, fmt.Errorf("provider does not support resource type %q", typeName)
+	}
+	coerced, err := lr.Block.CoerceValue(config)
+	if err != nil {
+		return nil, nil, fmt.Errorf("%s list configuration: %w", typeName, err)
+	}
+	return p.rpc.listResource(ctx, typeName, coerced, lr.Block.ImpliedType(), includeResource, limit, rs.Block.ImpliedType())
 }
 
 func (p *Provider) resourceType(ctx context.Context, typeName string) (cty.Type, error) {

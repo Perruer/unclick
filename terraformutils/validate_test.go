@@ -147,7 +147,7 @@ func TestFixInvalidConfig(t *testing.T) {
 	if rules[0].(map[string]interface{})["description"] != "ssh" {
 		t.Error("only the element the diagnostic points at may change")
 	}
-	if f.calls != 2 {
-		t.Errorf("validated %d times, want 2 (fix, then give up on the required one)", f.calls)
+	if f.calls != 3 {
+		t.Errorf("validated %d times, want 3 (one fix per round, then give up on the required one)", f.calls)
 	}
 }

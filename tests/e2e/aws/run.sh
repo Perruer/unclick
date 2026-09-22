@@ -29,3 +29,13 @@ cd generated/aws
 tofu init -input=false -no-color >/dev/null
 tofu plan -input=false -no-color | tee plan.txt
 grep -E "^Plan: [1-9][0-9]* to import, 0 to add, 0 to change, 0 to destroy\.$" plan.txt
+
+# The same estate through `scan`, which relies only on the provider's list
+# resources.
+cd "$work"
+rm -rf generated
+"$UNCLICK" scan aws --config "region=$AWS_REGION" --types aws_vpc,aws_subnet,aws_security_group,aws_route_table
+cd generated/aws
+tofu init -input=false -no-color >/dev/null
+tofu plan -input=false -no-color | tee plan.txt
+grep -E "^Plan: [1-9][0-9]* to import, 0 to add, 0 to change, 0 to destroy\.$" plan.txt
