@@ -136,6 +136,7 @@ func runScan(options scanOptions) error {
 			log.Printf("failed to convert %s: %v", r.InstanceInfo.Id, err)
 		}
 	}
+	terraformutils.LinkByID(resources)
 	terraformutils.FixInvalidConfig(resources, pw)
 
 	dir := filepath.Join(options.PathOutput, name)
