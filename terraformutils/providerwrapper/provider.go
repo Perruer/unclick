@@ -306,11 +306,12 @@ func (p *ProviderWrapper) initProvider(verbose bool) error {
 		p.provider.Close()
 		return err
 	}
-	if p.config != cty.NilVal {
-		if err := p.provider.Configure(context.Background(), p.config); err != nil {
-			p.provider.Close()
-			return err
-		}
+	// Configure even without settings, as OpenTofu does: an unconfigured
+	// provider may crash on the first read (the Kubernetes one does), and
+	// settings can come from the environment.
+	if err := p.provider.Configure(context.Background(), p.config); err != nil {
+		p.provider.Close()
+		return err
 	}
 
 	startedMu.Lock()

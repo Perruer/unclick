@@ -18,12 +18,14 @@ work="$(mktemp -d)"
 trap 'rm -rf "$work"' EXIT
 cd "$work"
 
-"$UNCLICK" import kubernetes --resources=namespaces,configmaps,deployments \
-  --filter="Name=metadata.0.namespace;Value=$ns" \
-  --filter="Type=namespaces;Name=metadata.0.name;Value=$ns"
+# The provider plugin reads the cluster from KUBE_CONFIG_PATH, the importer
+# from the usual kubeconfig.
+export KUBE_CONFIG_PATH="${KUBECONFIG:-$HOME/.kube/config}"
+
+"$UNCLICK" import kubernetes --resources=configmaps,deployments \
+  --filter="Name=metadata.0.namespace;Value=$ns"
 cd generated/kubernetes
 
-export KUBE_CONFIG_PATH="${KUBECONFIG:-$HOME/.kube/config}"
 tofu init -input=false -no-color >/dev/null
 tofu plan -input=false -no-color | tee plan.txt
 grep -E "^Plan: [1-9][0-9]* to import, 0 to add, 0 to change, 0 to destroy\.$" plan.txt

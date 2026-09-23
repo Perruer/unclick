@@ -1,3 +1,5 @@
+<img src="docs/logo.svg" width="96" align="right" alt="Unclick logo">
+
 # Unclick
 
 **Unclick your cloud: turn ClickOps into OpenTofu / Terraform code.**

@@ -1,3 +1,5 @@
+<img src="docs/logo.svg" width="96" align="right" alt="Логотип Unclick">
+
 # Unclick
 
 **Анкликни своё облако: преврати ClickOps в код OpenTofu / Terraform.**
