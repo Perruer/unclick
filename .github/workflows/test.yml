@@ -35,7 +35,7 @@ jobs:
       with:
         go-version-file: go.mod
         cache: true
-    - uses: opentofu/setup-opentofu@v1
+    - uses: opentofu/setup-opentofu@v2
       with:
         tofu_wrapper: false
     - name: Plugin client against real providers
@@ -53,7 +53,7 @@ jobs:
       with:
         go-version-file: go.mod
         cache: true
-    - uses: opentofu/setup-opentofu@v1
+    - uses: opentofu/setup-opentofu@v2
       with:
         tofu_wrapper: false
     - uses: actions/setup-python@v5
@@ -79,7 +79,7 @@ jobs:
       with:
         go-version-file: go.mod
         cache: true
-    - uses: opentofu/setup-opentofu@v1
+    - uses: opentofu/setup-opentofu@v2
       with:
         tofu_wrapper: false
     - uses: helm/kind-action@v1
