@@ -234,7 +234,7 @@ func writeScanOutput(dir, provider string, config map[string]string, resources [
 		all = append(all, *r)
 	}
 	for t, rs := range byType {
-		body, err := terraformutils.HclPrintResource(rs, map[string]interface{}{}, "hcl", true)
+		body, err := terraformutils.WriteResourcesHCL(rs)
 		if err != nil {
 			return fmt.Errorf("%s: %w", t, err)
 		}

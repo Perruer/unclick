@@ -163,7 +163,7 @@ func zeroNumberAttributesOf(r *schema.Provider, resourceTypes []string) map[stri
 	out := map[string][]string{}
 	for _, name := range resourceTypes {
 		rs, ok := r.ResourceTypes[name]
-		if !ok || !isLegacySDKResource(rs.Block) {
+		if !ok || !IsLegacySDKResource(rs.Block) {
 			continue
 		}
 		if patterns := zeroNumberPatterns(rs.Block, "^"); len(patterns) > 0 {
@@ -173,10 +173,10 @@ func zeroNumberAttributesOf(r *schema.Provider, resourceTypes []string) map[stri
 	return out
 }
 
-// isLegacySDKResource recognizes SDKv2 resources by the "id" attribute the
+// IsLegacySDKResource recognizes SDKv2 resources by the "id" attribute the
 // SDK adds to every resource as optional and computed. Plugin framework
 // resources declare id themselves, as computed only.
-func isLegacySDKResource(b *schema.Block) bool {
+func IsLegacySDKResource(b *schema.Block) bool {
 	id := b.Attributes["id"]
 	return id != nil && id.Optional && id.Computed
 }

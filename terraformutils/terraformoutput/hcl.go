@@ -14,6 +14,7 @@
 package terraformoutput
 
 import (
+	"errors"
 	"log"
 	"os"
 	"strings"
@@ -137,7 +138,7 @@ func printFile(v []terraformutils.Resource, fileName, path, output string, sort 
 		}
 	}
 
-	tfFile, err := terraformutils.HclPrintResource(v, map[string]interface{}{}, output, sort)
+	tfFile, err := resourceFile(v, output, sort)
 	if err != nil {
 		return err
 	}
@@ -162,4 +163,18 @@ func GetFileExtension(outputFormat string) string {
 		return "tf.json"
 	}
 	return "tf"
+}
+
+// resourceFile renders resources with the schema-aware HCL writer, and falls
+// back to Terraformer's printer for JSON output or when the schema is not
+// known (resources read back from a plan file).
+func resourceFile(resources []terraformutils.Resource, output string, sort bool) ([]byte, error) {
+	if output == "hcl" {
+		if b, err := terraformutils.WriteResourcesHCL(resources); err == nil {
+			return b, nil
+		} else if !errors.Is(err, terraformutils.ErrNoSchema) {
+			return nil, err
+		}
+	}
+	return terraformutils.HclPrintResource(resources, map[string]interface{}{}, output, sort)
 }
