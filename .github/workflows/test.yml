@@ -56,7 +56,7 @@ jobs:
     - uses: opentofu/setup-opentofu@v1
       with:
         tofu_wrapper: false
-    - uses: actions/setup-python@v5
+    - uses: actions/setup-python@v7
       with:
         python-version: "3.12"
     - name: Start moto
