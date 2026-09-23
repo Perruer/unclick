@@ -15,7 +15,7 @@ jobs:
         platform: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.platform }}
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v7
     - name: Install Go
       uses: actions/setup-go@v6
       with:
@@ -30,7 +30,7 @@ jobs:
     # Starts real provider plugins downloaded by OpenTofu.
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v7
     - uses: actions/setup-go@v6
       with:
         go-version-file: go.mod
@@ -48,7 +48,7 @@ jobs:
     # only imports: no changes, no new or destroyed resources.
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v7
     - uses: actions/setup-go@v6
       with:
         go-version-file: go.mod
@@ -74,7 +74,7 @@ jobs:
   e2e-kubernetes:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v7
     - uses: actions/setup-go@v6
       with:
         go-version-file: go.mod
