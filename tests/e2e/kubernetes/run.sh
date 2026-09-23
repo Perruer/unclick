@@ -27,5 +27,24 @@ export KUBE_CONFIG_PATH="${KUBECONFIG:-$HOME/.kube/config}"
 cd generated/kubernetes
 
 tofu init -input=false -no-color >/dev/null
-tofu plan -input=false -no-color | tee plan.txt
-grep -E "^Plan: [1-9][0-9]* to import, 0 to add, 0 to change, 0 to destroy\.$" plan.txt
+tofu plan -input=false -no-color -out=plan.bin | tee plan.txt
+grep -E "^Plan: [1-9][0-9]* to import, 0 to add, [0-9]+ to change, 0 to destroy\.$" plan.txt
+
+# The Kubernetes provider does not set wait_for_rollout on import, so the
+# first plan stores its default (true). It is a client-side setting and
+# changes nothing in the cluster; any other change is a failure.
+changed=$(tofu show -json plan.bin | jq -r '
+  .resource_changes[]
+  | select(.change.actions != ["no-op"])
+  | .address as $addr
+  | .change.before as $b
+  | .change.after as $a
+  | ($a | keys[]) as $k
+  | select($b[$k] != $a[$k])
+  | "\($addr).\($k)"')
+unexpected=$(printf '%s\n' "$changed" | grep -v -e '\.wait_for_rollout$' -e '^$' || true)
+if [ -n "$unexpected" ]; then
+  echo "unexpected changes:"
+  echo "$unexpected"
+  exit 1
+fi

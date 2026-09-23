@@ -75,6 +75,8 @@ unclick import aws list        # какие ресурсы поддержива�
 
 Запустите там `tofu init && tofu plan`. Если в плане только импорт, `tofu apply` возьмёт ресурсы под управление, ничего в них не меняя.
 
+У некоторых провайдеров есть настройки, которые живут только на стороне клиента, и при импорте их узнать неоткуда. Например, `wait_for_rollout` у `kubernetes_deployment`. В первом плане они выглядят как изменение на месте: `apply` лишь записывает настройку в state и ничего не меняет в облаке.
+
 ## Провайдеры
 
 `import` поддерживает: AliCloud, Auth0, AWS, Azure, Azure AD, Azure DevOps, Cloudflare, commercetools, Datadog, DigitalOcean, Equinix Metal, Fastly, GitHub, GitLab, фильтры Gmail, Google Cloud, Grafana, Heroku, Honeycomb, IBM Cloud, IONOS Cloud, Keycloak, Kubernetes, LaunchDarkly, Linode, Logz.io, Mackerel, MikroTik, Myra Security, New Relic, NS1, Octopus Deploy, Okta, Opal, OpenStack, Opsgenie, PagerDuty, PAN-OS, RabbitMQ, Tencent Cloud, Vault, Vultr, Xen Orchestra, Yandex Cloud.

@@ -75,6 +75,8 @@ Files go to `generated/<provider>/` by default:
 
 Run `tofu init && tofu plan` there. When the plan shows only imports, `tofu apply` adopts the resources without changing them.
 
+A few providers have client-side settings that an import cannot know, such as `wait_for_rollout` on `kubernetes_deployment`. The first plan shows them as an in-place change; applying it only records the setting in the state and changes nothing in the cloud.
+
 ## Providers
 
 `import` supports: AliCloud, Auth0, AWS, Azure, Azure AD, Azure DevOps, Cloudflare, commercetools, Datadog, DigitalOcean, Equinix Metal, Fastly, GitHub, GitLab, Gmail filters, Google Cloud, Grafana, Heroku, Honeycomb, IBM Cloud, IONOS Cloud, Keycloak, Kubernetes, LaunchDarkly, Linode, Logz.io, Mackerel, MikroTik, Myra Security, New Relic, NS1, Octopus Deploy, Okta, Opal, OpenStack, Opsgenie, PagerDuty, PAN-OS, RabbitMQ, Tencent Cloud, Vault, Vultr, Xen Orchestra, Yandex Cloud.
