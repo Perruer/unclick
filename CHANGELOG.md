@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.0 (unreleased)
+## 1.0.0 (2026-09-23)
 
 First release of Unclick, the continuation of Terraformer 0.8.30.
 
