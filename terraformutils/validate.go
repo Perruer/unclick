@@ -27,10 +27,6 @@ import (
 	"github.com/Perruer/unclick/internal/schema"
 )
 
-// maxFixRounds bounds how often one resource is re-validated. Every round
-// removes one argument.
-const maxFixRounds = 16
-
 // ConfigValidator is what FixInvalidConfig needs from a running provider.
 type ConfigValidator interface {
 	GetSchema() *schema.Provider
@@ -43,19 +39,45 @@ type ConfigValidator interface {
 // writing those back breaks rules the schema does not expose ("conflicts
 // with", "all of ... must be specified"). Dropping an optional argument
 // leaves it to the provider, which reads it back as the same zero value.
-func FixInvalidConfig(resources []*Resource, v ConfigValidator) {
+//
+// Removed arguments are recorded in Resource.LeftOut and errors that remain
+// in Resource.ProviderErrors; the HCL writer puts both in a comment above
+// the resource. It returns the resources that still fail validation.
+func FixInvalidConfig(resources []*Resource, v ConfigValidator) []*Resource {
 	s := v.GetSchema()
+	var invalid []*Resource
 	for _, r := range resources {
 		rs, ok := s.ResourceTypes[r.InstanceInfo.Type]
 		if !ok || r.Item == nil {
 			continue
 		}
 		fixResource(r, rs.Block, v)
+		if len(r.ProviderErrors) > 0 {
+			invalid = append(invalid, r)
+		}
 	}
+	return invalid
+}
+
+// LogFixSummary reports what FixInvalidConfig could not settle, so it is
+// not buried in per-resource log lines.
+func LogFixSummary(invalid []*Resource) {
+	if len(invalid) == 0 {
+		return
+	}
+	ids := make([]string, 0, len(invalid))
+	for _, r := range invalid {
+		ids = append(ids, r.InstanceInfo.Type+"."+r.ResourceName)
+	}
+	log.Printf("WARN: %d resources still fail provider validation; the errors are in a comment above each of them: %s",
+		len(invalid), strings.Join(ids, ", "))
 }
 
 func fixResource(r *Resource, b *schema.Block, v ConfigValidator) {
-	for round := 0; round < maxFixRounds; round++ {
+	// Every round removes one argument that is present, so the loop ends
+	// after at most that many removals and one last validation.
+	limit := countOptional(r.Item, b)
+	for round := 0; ; round++ {
 		config, err := ItemValue(r.Item, b)
 		if err != nil {
 			log.Printf("cannot validate %s: %v", r.InstanceInfo.Id, err)
@@ -66,48 +88,82 @@ func fixResource(r *Resource, b *schema.Block, v ConfigValidator) {
 			log.Printf("cannot validate %s: %v", r.InstanceInfo.Id, err)
 			return
 		}
-		// Remove one argument per round: two arguments that conflict are both
-		// reported, and dropping either one settles it.
-		removed := false
+		var errs []plugin.Diagnostic
 		for _, d := range diags {
-			if !d.Error || !removeOptional(r.Item, b, d.Path) {
-				continue
+			if d.Error {
+				errs = append(errs, d)
 			}
-			log.Printf("%s: left out %s (%s)", r.InstanceInfo.Id, pathString(d.Path), d.Summary)
-			removed = true
-			break
 		}
-		if !removed {
-			for _, d := range diags {
-				if d.Error {
-					log.Printf("WARN: %s: %s: %s", r.InstanceInfo.Id, d.Summary, d.Detail)
+		if len(errs) == 0 {
+			return
+		}
+
+		// Remove one argument per round: two arguments that conflict are
+		// both reported, and dropping either one settles it. Prefer one that
+		// holds a zero value, which the legacy SDK writes for arguments that
+		// were never set; an explicit zero could not have been in the user's
+		// configuration next to the argument it conflicts with.
+		var pick *plugin.Diagnostic
+		var pickTargets []optionalTarget
+		if round < limit {
+			for i := range errs {
+				targets := findOptional(r.Item, b, errs[i].Path)
+				if len(targets) == 0 {
+					continue
 				}
+				if pick == nil || (allZero(targets) && !allZero(pickTargets)) {
+					pick, pickTargets = &errs[i], targets
+				}
+			}
+		}
+		if pick == nil {
+			for _, d := range errs {
+				msg := d.Summary
+				if d.Detail != "" {
+					msg += ": " + d.Detail
+				}
+				if p := pathString(d.Path); p != "" {
+					msg = p + ": " + msg
+				}
+				r.ProviderErrors = append(r.ProviderErrors, msg)
+				log.Printf("WARN: %s: %s", r.InstanceInfo.Id, msg)
 			}
 			return
 		}
+		for _, t := range pickTargets {
+			delete(t.item, t.name)
+		}
+		left := fmt.Sprintf("%s (%s)", pathString(pick.Path), pick.Summary)
+		r.LeftOut = append(r.LeftOut, left)
+		log.Printf("%s: left out %s", r.InstanceInfo.Id, left)
 	}
 }
 
-// removeOptional deletes the argument a diagnostic points at, if the schema
-// says it is optional. It reports whether anything was removed.
-func removeOptional(item map[string]interface{}, b *schema.Block, path []plugin.PathStep) bool {
+// optionalTarget is one optional argument in a resource body.
+type optionalTarget struct {
+	item map[string]interface{}
+	name string
+}
+
+// findOptional returns the arguments a diagnostic points at, if the schema
+// says they are optional and they are present.
+func findOptional(item map[string]interface{}, b *schema.Block, path []plugin.PathStep) []optionalTarget {
 	if len(path) == 0 || path[0].Attribute == "" {
-		return false
+		return nil
 	}
 	name := path[0].Attribute
 	if attr, ok := b.Attributes[name]; ok {
 		if len(path) > 1 || attr.Required || !attr.Optional {
-			return false
+			return nil
 		}
 		if _, present := item[name]; !present {
-			return false
+			return nil
 		}
-		delete(item, name)
-		return true
+		return []optionalTarget{{item, name}}
 	}
 	nb, ok := b.BlockTypes[name]
 	if !ok {
-		return false
+		return nil
 	}
 	rest := path[1:]
 	var index int64 = -1
@@ -115,16 +171,65 @@ func removeOptional(item map[string]interface{}, b *schema.Block, path []plugin.
 		index = rest[0].Index
 		rest = rest[1:]
 	}
-	removed := false
+	var out []optionalTarget
 	for i, elem := range blockElements(item[name]) {
 		if index >= 0 && int64(i) != index {
 			continue
 		}
-		if removeOptional(elem, &nb.Block, rest) {
-			removed = true
+		out = append(out, findOptional(elem, &nb.Block, rest)...)
+	}
+	return out
+}
+
+// countOptional counts the optional arguments present in a body, including
+// those of nested blocks: the most FixInvalidConfig can ever remove.
+func countOptional(item map[string]interface{}, b *schema.Block) int {
+	n := 0
+	for name, attr := range b.Attributes {
+		if _, present := item[name]; present && attr.Optional && !attr.Required {
+			n++
 		}
 	}
-	return removed
+	for name, nb := range b.BlockTypes {
+		for _, elem := range blockElements(item[name]) {
+			n += countOptional(elem, &nb.Block)
+		}
+	}
+	return n
+}
+
+func allZero(targets []optionalTarget) bool {
+	for _, t := range targets {
+		if !isZeroValue(t.item[t.name]) {
+			return false
+		}
+	}
+	return len(targets) > 0
+}
+
+// isZeroValue reports whether a body value is what the legacy SDK writes for
+// an argument that was never set.
+func isZeroValue(v interface{}) bool {
+	switch t := v.(type) {
+	case nil:
+		return true
+	case string:
+		return t == "" || t == "0" || t == "false"
+	case bool:
+		return !t
+	case int:
+		return t == 0
+	case int64:
+		return t == 0
+	case float64:
+		return t == 0
+	case []interface{}:
+		return len(t) == 0
+	case map[string]interface{}:
+		return len(t) == 0
+	default:
+		return false
+	}
 }
 
 func blockElements(v interface{}) []map[string]interface{} {

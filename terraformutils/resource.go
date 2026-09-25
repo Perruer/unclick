@@ -48,6 +48,12 @@ type Resource struct {
 	// ImportID is the ID an `import` block needs when it differs from the
 	// ID the provider keeps in state. Empty means the state ID works.
 	ImportID string `json:",omitempty"`
+	// LeftOut lists the optional arguments FixInvalidConfig removed because
+	// the provider rejected them, with the provider's reason.
+	LeftOut []string `json:",omitempty"`
+	// ProviderErrors are the validation errors that remained after
+	// FixInvalidConfig; the resource needs a manual look before `apply`.
+	ProviderErrors []string `json:",omitempty"`
 }
 
 // GetImportID returns the ID to put in the resource's import block.

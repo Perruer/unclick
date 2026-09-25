@@ -60,6 +60,7 @@ func WriteResourcesHCL(resources []Resource) ([]byte, error) {
 		if i > 0 {
 			b.WriteString("\n")
 		}
+		writeFixComments(&b, r)
 		fmt.Fprintf(&b, "resource %s %s {\n", quoteLiteral(r.InstanceInfo.Type), quoteLiteral(r.ResourceName))
 		writeMetaArguments(&b, r.Item)
 		legacy := providerwrapper.IsLegacySDKResource(r.Schema)
@@ -73,6 +74,23 @@ func WriteResourcesHCL(resources []Resource) ([]byte, error) {
 		return nil, fmt.Errorf("generated HCL does not parse: %s", diags.Error())
 	}
 	return hclwrite.Format(src), nil
+}
+
+// writeFixComments tells the reader what FixInvalidConfig changed or could
+// not fix, right above the resource.
+func writeFixComments(b *strings.Builder, r Resource) {
+	oneLine := func(s string) string {
+		return strings.Join(strings.Fields(s), " ")
+	}
+	for _, left := range r.LeftOut {
+		fmt.Fprintf(b, "# unclick: left out %s; the provider reads it back from the cloud\n", oneLine(left))
+	}
+	if len(r.ProviderErrors) > 0 {
+		b.WriteString("# unclick: the provider still rejects this resource, check it before `tofu apply`:\n")
+		for _, e := range r.ProviderErrors {
+			fmt.Fprintf(b, "#   %s\n", oneLine(e))
+		}
+	}
 }
 
 // writeMetaArguments writes the meta-arguments some importers add to Item:

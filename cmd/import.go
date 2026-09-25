@@ -113,7 +113,7 @@ func Import(provider terraformutils.ProviderGenerator, options ImportOptions, ar
 	for r := range providerMapping.Resources {
 		resources = append(resources, r)
 	}
-	terraformutils.FixInvalidConfig(resources, providerWrapper)
+	terraformutils.LogFixSummary(terraformutils.FixInvalidConfig(resources, providerWrapper))
 
 	err = importFromPlan(providerMapping, options, args)
 

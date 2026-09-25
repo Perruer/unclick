@@ -137,7 +137,7 @@ func runScan(options scanOptions) error {
 		}
 	}
 	terraformutils.LinkByID(resources)
-	terraformutils.FixInvalidConfig(resources, pw)
+	terraformutils.LogFixSummary(terraformutils.FixInvalidConfig(resources, pw))
 
 	dir := filepath.Join(options.PathOutput, name)
 	if err := writeScanOutput(dir, name, configValues, resources); err != nil {
