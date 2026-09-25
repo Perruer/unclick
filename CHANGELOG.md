@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.0.1 (unreleased)
+
+### Fixed
+
+- Validation fixes no longer stop after 16 rounds and leave the resource invalid without a word: the loop runs until every optional argument the provider rejects is gone, which the number of arguments present bounds.
+- When the provider rejects several arguments, those holding a zero value are left out first: the legacy SDK writes zero values for arguments that were never set.
+
+### Added
+
+- Arguments left out and provider errors that remain are written as comments above the resource in the generated files, and the log ends with a list of resources that still fail validation.
+- A test that fails when the plugin protocol files gain a field the v5 and v6 adapters neither map nor skip on purpose.
+
 ## 1.0.0 (2026-09-23)
 
 First release of Unclick, the continuation of Terraformer 0.8.30.
