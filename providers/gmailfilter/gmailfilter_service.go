@@ -65,7 +65,7 @@ func (s *GmailfilterService) validateCredentials(creds string) error {
 	if _, err := os.Stat(creds); err == nil {
 		return nil
 	}
-	if _, err := googleoauth.CredentialsFromJSON(context.Background(), []byte(creds)); err != nil {
+	if _, err := googleoauth.CredentialsFromJSONWithType(context.Background(), []byte(creds), googleoauth.ServiceAccount); err != nil {
 		return fmt.Errorf("JSON credentials in %q are not valid: %s", creds, err)
 	}
 	return nil

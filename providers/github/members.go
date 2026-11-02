@@ -20,7 +20,7 @@ import (
 
 	"github.com/Perruer/unclick/terraformutils"
 
-	githubAPI "github.com/google/go-github/v35/github"
+	githubAPI "github.com/google/go-github/v67/github"
 )
 
 // MembersGenerator holds GithubService struct of Terraform service information

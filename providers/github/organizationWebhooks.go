@@ -21,7 +21,7 @@ import (
 
 	"github.com/Perruer/unclick/terraformutils"
 
-	githubAPI "github.com/google/go-github/v35/github"
+	githubAPI "github.com/google/go-github/v67/github"
 )
 
 type OrganizationWebhooksGenerator struct {
