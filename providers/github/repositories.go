@@ -22,7 +22,7 @@ import (
 	"strings"
 
 	"github.com/Perruer/unclick/terraformutils"
-	githubAPI "github.com/google/go-github/v35/github"
+	githubAPI "github.com/google/go-github/v67/github"
 )
 
 type RepositoriesGenerator struct {
@@ -213,12 +213,10 @@ func repositoryLister(ctx context.Context, client *githubAPI.Client, owner strin
 		user = owner
 	}
 	return func(page int) ([]*githubAPI.Repository, *githubAPI.Response, error) {
-		opt := &githubAPI.RepositoryListOptions{ListOptions: githubAPI.ListOptions{PerPage: 100, Page: page}}
+		listOpt := githubAPI.ListOptions{PerPage: 100, Page: page}
 		if user == "" {
-			opt.Affiliation = "owner"
-		} else {
-			opt.Type = "owner"
+			return client.Repositories.ListByAuthenticatedUser(ctx, &githubAPI.RepositoryListByAuthenticatedUserOptions{Affiliation: "owner", ListOptions: listOpt})
 		}
-		return client.Repositories.List(ctx, user, opt)
+		return client.Repositories.ListByUser(ctx, user, &githubAPI.RepositoryListByUserOptions{Type: "owner", ListOptions: listOpt})
 	}, nil
 }

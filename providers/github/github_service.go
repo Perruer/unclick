@@ -20,7 +20,7 @@ import (
 
 	"github.com/Perruer/unclick/terraformutils"
 	"github.com/bradleyfalzon/ghinstallation/v2"
-	"github.com/google/go-github/v35/github"
+	"github.com/google/go-github/v67/github"
 	"golang.org/x/oauth2"
 )
 
@@ -61,11 +61,11 @@ func (g *GithubService) createEnterpriseClient() (*github.Client, error) {
 		if err != nil {
 			return nil, err
 		}
-		return github.NewEnterpriseClient(baseURL, baseURL, &http.Client{Transport: itr})
+		return github.NewClient(&http.Client{Transport: itr}).WithEnterpriseURLs(baseURL, baseURL)
 	}
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: g.Args["token"].(string)},
 	)
 	tc := oauth2.NewClient(ctx, ts)
-	return github.NewEnterpriseClient(baseURL, baseURL, tc)
+	return github.NewClient(tc).WithEnterpriseURLs(baseURL, baseURL)
 }
